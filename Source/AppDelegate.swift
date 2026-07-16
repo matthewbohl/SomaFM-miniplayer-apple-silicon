@@ -6,6 +6,7 @@
 import Cocoa
 
 @NSApplicationMain
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     let menubarController = MenubarController()

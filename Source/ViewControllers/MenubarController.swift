@@ -6,7 +6,9 @@
 import Cocoa
 import Network
 
+@MainActor
 class MenubarController {
+    let radioPlayer = RadioPlayer()
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
     let rightClickMenu = NSMenu()
@@ -121,13 +123,13 @@ class MenubarController {
     }
 
     @objc func updateTrackName() {
-        if !isNetworkAvailable, RadioPlayer.player.timeControlStatus != .playing {
+        if radioPlayer.state == .waitingForNetwork {
             trackItem.title = "Network unavailable"
             trackItem.target = nil
             return
         }
 
-        guard let trackName = RadioPlayer.currentTrack, !trackName.isEmpty else {
+        guard let trackName = radioPlayer.currentTrack, !trackName.isEmpty else {
             trackItem.title = "..."
             trackItem.target = nil
             return
@@ -143,12 +145,13 @@ class MenubarController {
             showUserNotification()
         }
 
-        MusicSearchAPI.searchTrack()
+        MusicSearchAPI.searchTrack(named: trackName)
     }
 
     @objc func updatePlaybackState() {
         setupRecoveringTimerIfNeeded()
-        setStatusItem(playing: RadioPlayer.player.timeControlStatus != .paused)
+        setStatusItem(playing: radioPlayer.isPlaybackActive)
+        updateTrackName()
     }
 
     @objc func selectStation(_ sender: NSMenuItem) {
@@ -158,7 +161,7 @@ class MenubarController {
     }
 
     @objc func updateVolume(_ sender: NSSlider) {
-        RadioPlayer.player.volume = sender.floatValue
+        radioPlayer.volume = sender.floatValue
 
         if sender.window?.currentEvent?.type == .leftMouseUp {
             Settings.volume = sender.floatValue
@@ -176,8 +179,8 @@ class MenubarController {
     }
 
     @objc func togglePlay() {
-        if RadioPlayer.player.timeControlStatus != .paused {
-            RadioPlayer.player.pause()
+        if radioPlayer.isPlaybackActive {
+            radioPlayer.pause()
             return
         }
 
@@ -186,9 +189,7 @@ class MenubarController {
             return
         }
 
-        if RadioPlayer.player.currentItem != nil {
-            RadioPlayer.resumeLive()
-        } else if let savedChannel = SomaAPI.lastPlayedChannel {
+        if let savedChannel = SomaAPI.lastPlayedChannel {
             selectChannel(savedChannel)
         }
     }
@@ -230,7 +231,7 @@ class MenubarController {
 
         stationsMenu.items.forEach { $0.state = $0.tag == selectedChannelIdx ? .on : .off }
 
-        RadioPlayer.play(channel: channel)
+        radioPlayer.play(channel: channel)
         Log.info("Selected station \"\(channel.title)\"")
     }
 
@@ -251,7 +252,7 @@ class MenubarController {
     }
 
     private func showUserNotification() {
-        guard let trackName = RadioPlayer.currentTrack else { return }
+        guard let trackName = radioPlayer.currentTrack else { return }
         let stationName = SomaAPI.lastPlayedChannel?.title ?? "SomaFM"
 
         let notification = NSUserNotification()
@@ -285,7 +286,7 @@ class MenubarController {
     }
 
     private func setupRecoveringTimerIfNeeded() {
-        guard !isNetworkAvailable, RadioPlayer.player.timeControlStatus == .waitingToPlayAtSpecifiedRate else { return }
+        guard !isNetworkAvailable, radioPlayer.state == .buffering else { return }
 
         resumePlaybackTimer?.invalidate()
         resumePlaybackTimer = Timer.scheduledTimer(timeInterval: 5,
@@ -297,16 +298,18 @@ class MenubarController {
 
     private func recoverFromConnectionErrorIfNeeded() {
         resumePlaybackTimer?.invalidate()
-        guard RadioPlayer.player.timeControlStatus != .paused else { return }
-
-        RadioPlayer.resumeLive()
+        radioPlayer.resumeAfterNetworkRecovery(channel: SomaAPI.lastPlayedChannel)
     }
 
     @objc func showConnectionError() {
         resumePlaybackTimer?.invalidate()
         updateTrackName()
 
-        RadioPlayer.player.pause()
+        if radioPlayer.isPlaybackActive {
+            radioPlayer.waitForNetwork()
+        } else {
+            radioPlayer.pause()
+        }
         setStatusItem(playing: true)
 
         let notification = NSUserNotification()

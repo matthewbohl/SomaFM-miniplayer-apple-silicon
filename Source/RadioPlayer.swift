@@ -3,64 +3,152 @@
 //
 //  Copyright © 2017 Evgeny Aleksandrov. All rights reserved.
 
-import Foundation
 import AVFoundation
+import Foundation
 
 extension Notification.Name {
     static let radioPlayerTrackNameUpdated = Notification.Name("RadioPlayer.TrackName.Updated")
     static let radioPlayerStateUpdated = Notification.Name("RadioPlayer.State.Updated")
 }
 
-struct RadioPlayer {
-    private static var metadataToken: NSKeyValueObservation?
-    private static var timeControlStatusToken: NSKeyValueObservation?
+@MainActor
+final class RadioPlayer: NSObject {
+    enum State: Equatable {
+        case stopped
+        case buffering
+        case playing
+        case waitingForNetwork
+    }
 
-    static var player: AVPlayer = {
-        $0.volume = Settings.volume
-        timeControlStatusToken = $0.observe(\.timeControlStatus) { player, _ in
-            if player.timeControlStatus == .paused {
-                currentTrack = nil
-            }
-            NotificationCenter.default.post(name: .radioPlayerStateUpdated, object: nil)
-        }
-        metadataToken = $0.observe(\.currentItem?.timedMetadata) { player, _ in
-            if let metadata = player.currentItem?.timedMetadata?.first {
-                currentTrack = metadata.stringValue
-            }
-        }
-        return $0
-    }(AVPlayer())
+    private let player: AVPlayer
+    private var metadataOutput: AVPlayerItemMetadataOutput?
+    private var timeControlStatusToken: NSKeyValueObservation?
 
-    static var currentTrack: String? {
+    private(set) var state: State = .stopped {
         didSet {
-            NotificationCenter.default.post(name: .radioPlayerTrackNameUpdated, object: nil)
+            guard state != oldValue else { return }
+            NotificationCenter.default.post(name: .radioPlayerStateUpdated, object: self)
         }
     }
 
-    static func play(channel: Channel) {
+    private(set) var currentTrack: String? {
+        didSet {
+            guard currentTrack != oldValue else { return }
+            NotificationCenter.default.post(name: .radioPlayerTrackNameUpdated, object: self)
+        }
+    }
+
+    var volume: Float {
+        get { player.volume }
+        set { player.volume = newValue }
+    }
+
+    var isPlaybackActive: Bool {
+        state != .stopped
+    }
+
+    var hasActivePlayerItem: Bool {
+        player.currentItem != nil
+    }
+
+    init(player: AVPlayer = AVPlayer()) {
+        self.player = player
+        super.init()
+
+        player.volume = Settings.volume
+        timeControlStatusToken = player.observe(\.timeControlStatus, options: [.new]) { [weak self] _, _ in
+            Task { @MainActor [weak self] in
+                self?.updateStateFromPlayer()
+            }
+        }
+    }
+
+    func play(channel: Channel) {
         Settings.lastPlayedChannelId = channel.id
-
-        if let playerItem = playerItem(fromChannel: channel) {
-            player.replaceCurrentItem(with: playerItem)
-            player.play()
-        }
+        startLiveStream(channel: channel)
     }
 
-    static func resumeLive() {
-        if let playerItem = playerItem(fromChannel: SomaAPI.lastPlayedChannel) {
-            player.replaceCurrentItem(with: playerItem)
-            player.play()
-        }
+    func pause() {
+        discardCurrentStream()
+        state = .stopped
+    }
+
+    func waitForNetwork() {
+        guard isPlaybackActive else { return }
+
+        discardCurrentStream()
+        state = .waitingForNetwork
+    }
+
+    func resumeAfterNetworkRecovery(channel: Channel?) {
+        guard state == .waitingForNetwork, let channel = channel else { return }
+        startLiveStream(channel: channel)
     }
 
     // MARK: - Private
 
-    private static func playerItem(fromChannel: Channel?) -> AVPlayerItem? {
-        guard let channel = fromChannel, let firstPlaylist = channel.bestQualityPlaylist else { return nil }
+    private func startLiveStream(channel: Channel) {
+        guard let playlist = channel.bestQualityPlaylist else {
+            pause()
+            return
+        }
 
-        let playerItem = AVPlayerItem(url: firstPlaylist.url)
+        discardCurrentStream()
+
+        let playerItem = AVPlayerItem(url: playlist.url)
+        let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
+        metadataOutput.setDelegate(self, queue: .main)
+        playerItem.add(metadataOutput)
+
+        self.metadataOutput = metadataOutput
+        state = .buffering
+        player.replaceCurrentItem(with: playerItem)
+        player.play()
+    }
+
+    private func discardCurrentStream() {
+        player.pause()
+
+        if let metadataOutput = metadataOutput, let currentItem = player.currentItem {
+            metadataOutput.setDelegate(nil, queue: nil)
+            currentItem.remove(metadataOutput)
+        }
+
+        metadataOutput = nil
+        player.replaceCurrentItem(with: nil)
         currentTrack = nil
+    }
 
-        return playerItem
+    private func updateStateFromPlayer() {
+        guard state != .stopped, state != .waitingForNetwork else { return }
+
+        switch player.timeControlStatus {
+        case .playing:
+            state = .playing
+        case .waitingToPlayAtSpecifiedRate:
+            state = .buffering
+        case .paused:
+            if player.currentItem == nil {
+                state = .stopped
+            }
+        @unknown default:
+            state = .buffering
+        }
+    }
+}
+
+extension RadioPlayer: AVPlayerItemMetadataOutputPushDelegate {
+    nonisolated func metadataOutput(_ output: AVPlayerItemMetadataOutput,
+                                    didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup],
+                                    from track: AVPlayerItemTrack?) {
+        let trackName = groups.lazy
+            .flatMap { $0.items }
+            .compactMap { $0.stringValue }
+            .first
+
+        Task { @MainActor [weak self] in
+            guard self?.metadataOutput === output else { return }
+            self?.currentTrack = trackName
+        }
     }
 }

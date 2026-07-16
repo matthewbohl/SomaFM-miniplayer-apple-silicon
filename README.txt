@@ -63,6 +63,10 @@ Run the build smoke test:
 
     Scripts/verify-arm64-debug-build.sh
 
+Run the arm64 unit tests without code signing:
+
+    xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destination 'platform=macOS,arch=arm64' CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO test
+
 Configure local signing:
 
     cp Config/Signing.local.example.xcconfig Config/Signing.local.xcconfig
@@ -97,15 +101,19 @@ Current modernization baseline:
 - Reachability.swift was replaced with Network.framework path monitoring.
 - MediaKeyTap was removed from the build for now, so global media key support is temporarily disabled.
 - A no-sign arm64 Debug build succeeds.
+- An XCTest target now covers the playback stream lifecycle on arm64.
+- RadioPlayer is an instance-based, main-actor controller with explicit stopped, buffering, playing, and network-waiting states.
+- Pausing or waiting for the network now removes the live AVPlayerItem so AVFoundation cannot continue buffering a stopped stream, addressing upstream issue #11.
+- Timed stream metadata now uses AVPlayerItemMetadataOutput instead of the deprecated timedMetadata KVO path.
 - Signing settings are routed through `Config/Signing.xcconfig`; personal values belong only in ignored `Config/Signing.local.xcconfig`.
-- Remaining known warnings include deprecated NSUserNotification usage, AVPlayerItem timedMetadata usage, and the legacy launch-at-login query path.
+- Remaining known warnings include deprecated NSUserNotification usage and the legacy launch-at-login query path.
 
 Open setup items
 ----------------
 
 - Replace NSUserNotification with UserNotifications.
-- Replace timedMetadata polling with AVPlayerItemMetadataOutput.
 - Revisit launch-at-login implementation for modern ServiceManagement APIs.
 - Decide whether to restore media key support with maintained source, a local compatibility layer, or a documented non-goal.
-- Add XCTest coverage around model decoding, settings, URL construction, and channel sorting.
+- Extend XCTest coverage beyond the playback lifecycle to model decoding, settings, URL construction, and channel sorting.
+- Validate long-duration paused memory use with Instruments against the report in upstream issue #11.
 - Add packaging documentation.
