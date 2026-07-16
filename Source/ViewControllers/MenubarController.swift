@@ -12,6 +12,7 @@ class MenubarController {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
     private let notificationService: UserNotificationService
+    private var mediaControlsController: MediaControlsController?
 
     let rightClickMenu = NSMenu()
     let stationsMenu = NSMenu()
@@ -38,6 +39,9 @@ class MenubarController {
         setupStatusItem()
         setupMenu()
         setupReachability()
+
+        mediaControlsController = MediaControlsController(handler: self)
+        updateMediaNavigationAvailability()
 
         if Settings.shouldPlayOnLaunch {
             togglePlay()
@@ -108,6 +112,7 @@ class MenubarController {
 
         guard let channels = SomaAPI.channels, let sortedChannels = sortedChannels else {
             stationsMenu.addItem(NSMenuItem(title: "No channels available", action: nil, keyEquivalent: ""))
+            updateMediaNavigationAvailability()
             return
         }
 
@@ -124,9 +129,13 @@ class MenubarController {
 
             stationsMenu.addItem(channelItem)
         }
+
+        updateMediaNavigationAvailability()
     }
 
     @objc func updateTrackName() {
+        updateMediaControls()
+
         if radioPlayer.state == .waitingForNetwork {
             trackItem.title = "Network unavailable"
             trackItem.target = nil
@@ -155,6 +164,7 @@ class MenubarController {
     @objc func updatePlaybackState() {
         setupRecoveringTimerIfNeeded()
         setStatusItem(playing: radioPlayer.isPlaybackActive)
+        updateMediaControls()
         updateTrackName()
     }
 
@@ -183,39 +193,15 @@ class MenubarController {
     }
 
     @objc func togglePlay() {
-        if radioPlayer.isPlaybackActive {
-            radioPlayer.pause()
-            return
-        }
-
-        guard isNetworkAvailable else {
-            showConnectionError()
-            return
-        }
-
-        if let savedChannel = SomaAPI.lastPlayedChannel {
-            selectChannel(savedChannel)
-        }
+        _ = handleTogglePlayPauseCommand()
     }
 
     @objc func previousTap() {
-        guard let sortedChannels = sortedChannels,
-            let lastPlayedChannel = SomaAPI.lastPlayedChannel,
-            let lastPlayedIndex = sortedChannels.firstIndex(where: { $0.id == lastPlayedChannel.id })
-            else { return }
-
-        let newIndex = lastPlayedIndex == 0 ? sortedChannels.count - 1 : lastPlayedIndex - 1
-        selectChannel(sortedChannels[newIndex])
+        _ = handlePreviousCommand()
     }
 
     @objc func nextTap() {
-        guard let sortedChannels = sortedChannels,
-            let lastPlayedChannel = SomaAPI.lastPlayedChannel,
-            let lastPlayedIndex = sortedChannels.firstIndex(where: { $0.id == lastPlayedChannel.id })
-            else { return }
-
-        let newIndex = lastPlayedIndex == sortedChannels.count - 1 ? 0 : lastPlayedIndex + 1
-        selectChannel(sortedChannels[newIndex])
+        _ = handleNextCommand()
     }
 
     @objc func searchTrack() {
@@ -226,17 +212,52 @@ class MenubarController {
 
     // MARK: - Private
 
-    private func selectChannel(_ channel: Channel) {
-        guard let channels = SomaAPI.channels, let selectedChannelIdx = channels.firstIndex(where: { $0.id == channel.id }) else { return }
+    @discardableResult
+    private func selectChannel(_ channel: Channel) -> Bool {
+        guard let channels = SomaAPI.channels,
+            let selectedChannelIdx = channels.firstIndex(where: { $0.id == channel.id }) else { return false }
         guard isNetworkAvailable else {
             showConnectionError()
-            return
+            return false
         }
 
         stationsMenu.items.forEach { $0.state = $0.tag == selectedChannelIdx ? .on : .off }
 
         radioPlayer.play(channel: channel)
+        mediaControlsController?.activate(
+            stationID: channel.id,
+            stationName: channel.title,
+            trackName: radioPlayer.currentTrack,
+            playbackState: mediaPlaybackState
+        )
         Log.info("Selected station \"\(channel.title)\"")
+        return true
+    }
+
+    private var mediaPlaybackState: MediaPlaybackState {
+        switch radioPlayer.state {
+        case .playing, .buffering:
+            return .playing
+        case .stopped:
+            return .paused
+        case .waitingForNetwork:
+            return .interrupted
+        }
+    }
+
+    private func updateMediaControls() {
+        guard let channel = SomaAPI.lastPlayedChannel else { return }
+
+        mediaControlsController?.update(
+            stationID: channel.id,
+            stationName: channel.title,
+            trackName: radioPlayer.currentTrack,
+            playbackState: mediaPlaybackState
+        )
+    }
+
+    private func updateMediaNavigationAvailability() {
+        mediaControlsController?.setNavigationEnabled((sortedChannels?.count ?? 0) > 1)
     }
 
     private func showMenu() {
@@ -330,5 +351,51 @@ class MenubarController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.setStatusItem(playing: false)
         }
+    }
+}
+
+extension MenubarController: MediaCommandHandling {
+    func handlePlayCommand() -> Bool {
+        if radioPlayer.isPlaybackActive {
+            return true
+        }
+
+        guard isNetworkAvailable else {
+            showConnectionError()
+            return false
+        }
+        guard let savedChannel = SomaAPI.lastPlayedChannel else { return false }
+        return selectChannel(savedChannel)
+    }
+
+    func handlePauseCommand() -> Bool {
+        if radioPlayer.isPlaybackActive {
+            radioPlayer.pause()
+        }
+        return true
+    }
+
+    func handleTogglePlayPauseCommand() -> Bool {
+        radioPlayer.isPlaybackActive ? handlePauseCommand() : handlePlayCommand()
+    }
+
+    func handlePreviousCommand() -> Bool {
+        guard let sortedChannels = sortedChannels,
+            let lastPlayedChannel = SomaAPI.lastPlayedChannel,
+            let lastPlayedIndex = sortedChannels.firstIndex(where: { $0.id == lastPlayedChannel.id })
+            else { return false }
+
+        let newIndex = lastPlayedIndex == 0 ? sortedChannels.count - 1 : lastPlayedIndex - 1
+        return selectChannel(sortedChannels[newIndex])
+    }
+
+    func handleNextCommand() -> Bool {
+        guard let sortedChannels = sortedChannels,
+            let lastPlayedChannel = SomaAPI.lastPlayedChannel,
+            let lastPlayedIndex = sortedChannels.firstIndex(where: { $0.id == lastPlayedChannel.id })
+            else { return false }
+
+        let newIndex = lastPlayedIndex == sortedChannels.count - 1 ? 0 : lastPlayedIndex + 1
+        return selectChannel(sortedChannels[newIndex])
     }
 }

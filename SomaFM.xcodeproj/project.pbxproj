@@ -11,6 +11,8 @@
 		55F000000000000000000010 /* StartAtLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000011 /* StartAtLoginTests.swift */; };
 		55F000000000000000000012 /* UserNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000013 /* UserNotificationService.swift */; };
 		55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000015 /* UserNotificationServiceTests.swift */; };
+		55F000000000000000000016 /* MediaControlsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000017 /* MediaControlsController.swift */; };
+		55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000019 /* MediaControlsControllerTests.swift */; };
 		55F00000000000000000000F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F00000000000000000000E /* XCTest.framework */; };
 		55649B171FACEC410002006C /* MusicSearchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55649B161FACEC410002006C /* MusicSearchAPI.swift */; };
 		55649B191FACF0EF0002006C /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55649B181FACF0EF0002006C /* SearchResult.swift */; };
@@ -58,6 +60,8 @@
 		55F000000000000000000011 /* StartAtLoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartAtLoginTests.swift; sourceTree = "<group>"; };
 		55F000000000000000000013 /* UserNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationService.swift; sourceTree = "<group>"; };
 		55F000000000000000000015 /* UserNotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationServiceTests.swift; sourceTree = "<group>"; };
+		55F000000000000000000017 /* MediaControlsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsController.swift; sourceTree = "<group>"; };
+		55F000000000000000000019 /* MediaControlsControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsControllerTests.swift; sourceTree = "<group>"; };
 		55F000000000000000000003 /* SomaFMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SomaFMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		55F00000000000000000000E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		55649B161FACEC410002006C /* MusicSearchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSearchAPI.swift; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 		558AD6D61F82C114000013B1 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				55F000000000000000000017 /* MediaControlsController.swift */,
 				558AD6D71F82C114000013B1 /* Log.swift */,
 				55E011391F8579FF00C499D1 /* Settings.swift */,
 				55B994D01F9E19EB0045844D /* String+Truncate.swift */,
@@ -215,6 +220,7 @@
 		55F000000000000000000007 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				55F000000000000000000019 /* MediaControlsControllerTests.swift */,
 				55F000000000000000000002 /* RadioPlayerTests.swift */,
 				55F000000000000000000011 /* StartAtLoginTests.swift */,
 				55F000000000000000000015 /* UserNotificationServiceTests.swift */,
@@ -360,6 +366,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */,
 				55F000000000000000000001 /* RadioPlayerTests.swift in Sources */,
 				55F000000000000000000010 /* StartAtLoginTests.swift in Sources */,
 				55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */,
@@ -370,6 +377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55F000000000000000000016 /* MediaControlsController.swift in Sources */,
 				55B994D11F9E19EB0045844D /* String+Truncate.swift in Sources */,
 				55EE48761F8400F600D28F25 /* RadioPlayer.swift in Sources */,
 				556877981F83E33800F6B866 /* MenubarController.swift in Sources */,

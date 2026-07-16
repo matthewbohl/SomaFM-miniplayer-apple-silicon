@@ -26,7 +26,8 @@ Current modernization work includes:
 - Timed stream metadata through `AVPlayerItemMetadataOutput`.
 - Launch at login through the modern `SMAppService` main-application API.
 - Local track and network alerts through the `UserNotifications` framework with explicit opt-in authorization.
-- XCTest coverage for playback stream disposal, recovery, launch-at-login, and notification behavior.
+- Global media controls and Now Playing metadata through the macOS `MediaPlayer` framework once station playback begins.
+- XCTest coverage for playback stream disposal, recovery, launch-at-login, notifications, and media controls.
 - Local signing configuration that keeps personal Apple Developer values out of git.
 
 ## Requirements
@@ -95,7 +96,6 @@ rg --files
 
 ## Known Limitations And Next Steps
 
-- Global media-key support is temporarily disabled while the archived `MediaKeyTap` dependency is replaced or reconsidered.
 - Playback lifecycle coverage exists, but model decoding, settings, URL construction, and channel sorting need tests.
 - Long-duration paused memory use still needs an Instruments soak test against upstream issue #11.
 - Signing, notarization, packaging, and release documentation remain to be completed.
