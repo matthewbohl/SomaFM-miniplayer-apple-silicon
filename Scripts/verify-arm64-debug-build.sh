@@ -3,6 +3,8 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+Scripts/check-public-repo-safety.sh
+
 xcodebuild \
   -project SomaFM.xcodeproj \
   -scheme SomaFM \

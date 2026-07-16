@@ -48,7 +48,7 @@ Every implementation task follows this loop:
 8. Update documentation, including `README.md` when project details or command line options change.
 9. Generate or update test cases for changed behavior where practical.
 10. Run relevant verification commands.
-11. Audit the staged diff and tracked configuration for private developer or machine details. Restore project placeholders before committing, without reverting unrelated user changes.
+11. Run `Scripts/check-public-repo-safety.sh`, then audit the staged diff for private developer or machine details. Restore project placeholders before committing, without reverting unrelated user changes.
 12. Commit completed work.
 13. Push committed work before more than five local commits are outstanding.
 14. Report what changed, how it was verified, and what remains.
@@ -75,6 +75,7 @@ Every implementation task follows this loop:
 - Do not rewrite shared history unless explicitly requested.
 - Do not use destructive git commands without explicit approval.
 - Never commit `Config/Signing.local.xcconfig` or values copied from it. Confirm staged signing settings still use the `SOMAFM_*` variables from `Config/Signing.xcconfig`.
+- Treat a failure from `Scripts/check-public-repo-safety.sh` as a commit blocker. Update the check when a new class of private local data is discovered.
 
 ## Agent Notes
 

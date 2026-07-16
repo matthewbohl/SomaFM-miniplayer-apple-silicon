@@ -28,6 +28,7 @@ Current modernization work includes:
 - Local track and network alerts through the `UserNotifications` framework with explicit opt-in authorization.
 - Global media controls and Now Playing metadata through the macOS `MediaPlayer` framework once station playback begins.
 - Automatic Light and Dark appearance support through AppKit semantic colors and template images.
+- A repository safety check that blocks tracked personal signing values, private signing material, local home paths, and common credential formats.
 - XCTest coverage for playback stream disposal, recovery, launch-at-login, notifications, and media controls.
 - Local signing configuration that keeps personal Apple Developer values out of git.
 
@@ -51,6 +52,12 @@ Run the build smoke test:
 
 ```sh
 Scripts/verify-arm64-debug-build.sh
+```
+
+Run the public-repository safety check independently:
+
+```sh
+Scripts/check-public-repo-safety.sh
 ```
 
 Run the arm64 unit tests without code signing:

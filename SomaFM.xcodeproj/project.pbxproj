@@ -3,17 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 71;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		55F000000000000000000001 /* RadioPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000002 /* RadioPlayerTests.swift */; };
-		55F000000000000000000010 /* StartAtLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000011 /* StartAtLoginTests.swift */; };
-		55F000000000000000000012 /* UserNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000013 /* UserNotificationService.swift */; };
-		55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000015 /* UserNotificationServiceTests.swift */; };
-		55F000000000000000000016 /* MediaControlsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000017 /* MediaControlsController.swift */; };
-		55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000019 /* MediaControlsControllerTests.swift */; };
-		55F00000000000000000000F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F00000000000000000000E /* XCTest.framework */; };
 		55649B171FACEC410002006C /* MusicSearchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55649B161FACEC410002006C /* MusicSearchAPI.swift */; };
 		55649B191FACF0EF0002006C /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55649B181FACF0EF0002006C /* SearchResult.swift */; };
 		55649B1B1FAD0CE10002006C /* HyperTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55649B1A1FAD0CE10002006C /* HyperTextField.swift */; };
@@ -30,6 +23,13 @@
 		55DB7F3C1F82CBF6009C3E0E /* SomaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DB7F3B1F82CBF6009C3E0E /* SomaAPI.swift */; };
 		55E0113A1F8579FF00C499D1 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E011391F8579FF00C499D1 /* Settings.swift */; };
 		55EE48761F8400F600D28F25 /* RadioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EE48751F8400F600D28F25 /* RadioPlayer.swift */; };
+		55F000000000000000000001 /* RadioPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000002 /* RadioPlayerTests.swift */; };
+		55F00000000000000000000F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F00000000000000000000E /* XCTest.framework */; };
+		55F000000000000000000010 /* StartAtLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000011 /* StartAtLoginTests.swift */; };
+		55F000000000000000000012 /* UserNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000013 /* UserNotificationService.swift */; };
+		55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000015 /* UserNotificationServiceTests.swift */; };
+		55F000000000000000000016 /* MediaControlsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000017 /* MediaControlsController.swift */; };
+		55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000019 /* MediaControlsControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,14 +56,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		55F000000000000000000002 /* RadioPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerTests.swift; sourceTree = "<group>"; };
-		55F000000000000000000011 /* StartAtLoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartAtLoginTests.swift; sourceTree = "<group>"; };
-		55F000000000000000000013 /* UserNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationService.swift; sourceTree = "<group>"; };
-		55F000000000000000000015 /* UserNotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationServiceTests.swift; sourceTree = "<group>"; };
-		55F000000000000000000017 /* MediaControlsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsController.swift; sourceTree = "<group>"; };
-		55F000000000000000000019 /* MediaControlsControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsControllerTests.swift; sourceTree = "<group>"; };
-		55F000000000000000000003 /* SomaFMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SomaFMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		55F00000000000000000000E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		55649B161FACEC410002006C /* MusicSearchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSearchAPI.swift; sourceTree = "<group>"; };
 		55649B181FACF0EF0002006C /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		55649B1A1FAD0CE10002006C /* HyperTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HyperTextField.swift; sourceTree = "<group>"; };
@@ -85,9 +77,24 @@
 		55DB7F3B1F82CBF6009C3E0E /* SomaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomaAPI.swift; sourceTree = "<group>"; };
 		55E011391F8579FF00C499D1 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		55EE48751F8400F600D28F25 /* RadioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayer.swift; sourceTree = "<group>"; };
+		55F000000000000000000002 /* RadioPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerTests.swift; sourceTree = "<group>"; };
+		55F000000000000000000003 /* SomaFMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SomaFMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		55F00000000000000000000E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+		55F000000000000000000011 /* StartAtLoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartAtLoginTests.swift; sourceTree = "<group>"; };
+		55F000000000000000000013 /* UserNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationService.swift; sourceTree = "<group>"; };
+		55F000000000000000000015 /* UserNotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationServiceTests.swift; sourceTree = "<group>"; };
+		55F000000000000000000017 /* MediaControlsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsController.swift; sourceTree = "<group>"; };
+		55F000000000000000000019 /* MediaControlsControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		558AD6AD1F82BDD1000013B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		55F000000000000000000004 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -96,16 +103,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		558AD6AD1F82BDD1000013B1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		276EBFB130094F6D00FDF6B9 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				55F00000000000000000000E /* XCTest.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		558AD6A71F82BDD1000013B1 = {
 			isa = PBXGroup;
 			children = (
@@ -115,16 +123,8 @@
 				558AD6C61F82BF34000013B1 /* Resources */,
 				558AD6CB1F82BF34000013B1 /* Supporting-files */,
 				558AD6B11F82BDD1000013B1 /* Products */,
+				276EBFB130094F6D00FDF6B9 /* Recovered References */,
 			);
-			sourceTree = "<group>";
-		};
-		55A000000000000000000003 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				55A000000000000000000001 /* Signing.xcconfig */,
-				55A000000000000000000002 /* Signing.local.example.xcconfig */,
-			);
-			path = Config;
 			sourceTree = "<group>";
 		};
 		558AD6B11F82BDD1000013B1 /* Products */ = {
@@ -197,6 +197,15 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		55A000000000000000000003 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				55A000000000000000000001 /* Signing.xcconfig */,
+				55A000000000000000000002 /* Signing.local.example.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		55DB7F351F82C458009C3E0E /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,24 +240,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		55F000000000000000000008 /* SomaFMTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 55F000000000000000000009 /* Build configuration list for PBXNativeTarget "SomaFMTests" */;
-			buildPhases = (
-				55F000000000000000000006 /* Sources */,
-				55F000000000000000000004 /* Frameworks */,
-				55F000000000000000000005 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				55F00000000000000000000D /* PBXTargetDependency */,
-			);
-			name = SomaFMTests;
-			productName = SomaFMTests;
-			productReference = 55F000000000000000000003 /* SomaFMTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		558AD6AF1F82BDD1000013B1 /* SomaFM */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 558AD6C01F82BDD1000013B1 /* Build configuration list for PBXNativeTarget "SomaFM" */;
@@ -269,6 +260,24 @@
 			productReference = 558AD6B01F82BDD1000013B1 /* SomaFM miniplayer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		55F000000000000000000008 /* SomaFMTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 55F000000000000000000009 /* Build configuration list for PBXNativeTarget "SomaFMTests" */;
+			buildPhases = (
+				55F000000000000000000006 /* Sources */,
+				55F000000000000000000004 /* Frameworks */,
+				55F000000000000000000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				55F00000000000000000000D /* PBXTargetDependency */,
+			);
+			name = SomaFMTests;
+			productName = SomaFMTests;
+			productReference = 55F000000000000000000003 /* SomaFMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -279,10 +288,6 @@
 				LastUpgradeCheck = 2700;
 				ORGANIZATIONNAME = "Evgeny Aleksandrov";
 				TargetAttributes = {
-					55F000000000000000000008 = {
-						CreatedOnToolsVersion = 27.0;
-						TestTargetID = 558AD6AF1F82BDD1000013B1;
-					};
 					558AD6AF1F82BDD1000013B1 = {
 						CreatedOnToolsVersion = 9.0;
 						ProvisioningStyle = Automatic;
@@ -291,6 +296,10 @@
 								enabled = 1;
 							};
 						};
+					};
+					55F000000000000000000008 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 558AD6AF1F82BDD1000013B1;
 					};
 				};
 			};
@@ -314,19 +323,19 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		55F000000000000000000005 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		558AD6AE1F82BDD1000013B1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				558AD6CE1F82BF63000013B1 /* Assets.xcassets in Resources */,
 				558AD6CF1F82BF69000013B1 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		55F000000000000000000005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,17 +371,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		55F000000000000000000006 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */,
-				55F000000000000000000001 /* RadioPlayerTests.swift in Sources */,
-				55F000000000000000000010 /* StartAtLoginTests.swift in Sources */,
-				55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		558AD6AC1F82BDD1000013B1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -393,6 +391,17 @@
 				55E0113A1F8579FF00C499D1 /* Settings.swift in Sources */,
 				558AD6D11F82BF6F000013B1 /* AppDelegate.swift in Sources */,
 				55DB7F3A1F82C552009C3E0E /* Playlist.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		55F000000000000000000006 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */,
+				55F000000000000000000001 /* RadioPlayerTests.swift in Sources */,
+				55F000000000000000000010 /* StartAtLoginTests.swift in Sources */,
+				55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,42 +427,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		55F00000000000000000000A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SomaFM miniplayer.app/Contents/MacOS/SomaFM miniplayer";
-			};
-			name = Debug;
-		};
-		55F00000000000000000000B /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SomaFM miniplayer.app/Contents/MacOS/SomaFM miniplayer";
-			};
-			name = Release;
-		};
 		558AD6BE1F82BDD1000013B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
@@ -558,7 +531,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -573,7 +547,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
 				INFOPLIST_FILE = "Supporting-files/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID)";
 				PRODUCT_NAME = "SomaFM miniplayer";
 				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
@@ -592,7 +569,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
 				INFOPLIST_FILE = "Supporting-files/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID)";
 				PRODUCT_NAME = "SomaFM miniplayer";
 				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
@@ -600,18 +580,53 @@
 			};
 			name = Release;
 		};
+		55F00000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SomaFM miniplayer.app/Contents/MacOS/SomaFM miniplayer";
+			};
+			name = Debug;
+		};
+		55F00000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SomaFM miniplayer.app/Contents/MacOS/SomaFM miniplayer";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		55F000000000000000000009 /* Build configuration list for PBXNativeTarget "SomaFMTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				55F00000000000000000000A /* Debug */,
-				55F00000000000000000000B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		558AD6AB1F82BDD1000013B1 /* Build configuration list for PBXProject "SomaFM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -626,6 +641,15 @@
 			buildConfigurations = (
 				558AD6C11F82BDD1000013B1 /* Debug */,
 				558AD6C21F82BDD1000013B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		55F000000000000000000009 /* Build configuration list for PBXNativeTarget "SomaFMTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				55F00000000000000000000A /* Debug */,
+				55F00000000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
