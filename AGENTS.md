@@ -25,7 +25,7 @@ The goal is to preserve the spirit of the original SomaFM mini player while upda
 - Local branch at project start: `main`
 - Local status at project start: fresh repository with no committed files
 - Primary platform target: modern Apple silicon based Mac computers
-- Documentation companion: `README.txt`
+- Canonical project documentation: `README.md`
 
 Until source code is imported, all technical assumptions about language, build system, dependencies, and supported macOS versions must be confirmed from local files or from the upstream repository.
 
@@ -36,7 +36,7 @@ Every implementation task follows this loop:
 1. Check current repository status with `git status --short --branch`.
 2. Load local project context:
    - read `AGENTS.md`
-   - read `README.txt`
+   - read `README.md`
    - inspect relevant source, build, test, and configuration files
    - check remotes, branches, and recent commits when git history matters
 3. Review the request and restate the intended outcome.
@@ -44,7 +44,7 @@ Every implementation task follows this loop:
 5. Propose one alternative solution with tradeoffs.
 6. Wait for proposal acceptance before implementing, unless the user explicitly asks to proceed immediately.
 7. Implement the accepted solution in focused commits.
-8. Update documentation, including `README.txt` when project details or command line options change.
+8. Update documentation, including `README.md` when project details or command line options change.
 9. Generate or update test cases for changed behavior where practical.
 10. Run relevant verification commands.
 11. Commit completed work.
@@ -53,7 +53,7 @@ Every implementation task follows this loop:
 
 ## Documentation Rules
 
-- `README.txt` is the running project handbook.
+- `README.md` is the canonical project handbook and GitHub-facing README.
 - Keep command line options, build commands, test commands, and known setup requirements current.
 - Record important modernization decisions near the code or in project docs.
 - Do not let documentation drift behind behavior.

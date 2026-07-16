@@ -1,48 +1,113 @@
-# SomaFM miniplayer
+# SomaFM Mini Player for Apple Silicon
 
-[![Latest Release](https://img.shields.io/github/release/ealeksandrov/SomaFM-miniplayer.svg)](https://github.com/ealeksandrov/SomaFM-miniplayer/releases/latest)
-[![License](https://img.shields.io/github/license/ealeksandrov/SomaFM-miniplayer.svg)](LICENSE.md)
-![Platform](https://img.shields.io/badge/platform-macos-lightgrey.svg)
+[![License](https://img.shields.io/github/license/matthewbohl/SomaFM-miniplayer-apple-silicon.svg)](LICENSE.md)
+![Platform](https://img.shields.io/badge/platform-macOS%2012%2B-lightgrey.svg)
+![Architecture](https://img.shields.io/badge/architecture-arm64-blue.svg)
 
-![Screenshot](01.jpg)
+![SomaFM Mini Player](01.jpg)
 
-This is unofficial player that gives you minimal, background playback of SomaFM channels.
+SomaFM Mini Player is an unofficial macOS menu-bar player that provides minimal, background playback of [SomaFM](https://somafm.com/) channels.
 
-## Apple silicon modernization
+This fork modernizes the original [ealeksandrov/SomaFM-miniplayer](https://github.com/ealeksandrov/SomaFM-miniplayer) project for current Apple silicon Macs while preserving the original app's focused behavior and interface.
 
-This fork is being updated for modern Apple silicon Macs. The current baseline builds the app with Xcode 27 for macOS 12.0+ and removes the old Carthage framework dependency path.
+## Project Status
 
-Current notes:
+The application currently builds and runs natively on arm64 with Xcode 27 beta and targets macOS 12.0 or later. This repository does not yet publish a signed or notarized binary release; build the application from source using the instructions below.
 
-* Reachability is handled with `Network.framework`.
-* Global media key support is temporarily disabled while the archived `MediaKeyTap` dependency is replaced or reconsidered.
-* A no-sign arm64 Debug build can be verified with `Scripts/verify-arm64-debug-build.sh`.
-* Personal Apple signing values are kept out of git; use `Config/Signing.local.xcconfig` for local signing.
+Current modernization work includes:
 
-## Local signing
+- Native arm64 Debug builds.
+- Swift 5 project settings.
+- Removal of the old Carthage dependency path.
+- Network monitoring through `Network.framework`.
+- An instance-based, main-actor playback controller.
+- Explicit playback lifecycle states for stopped, buffering, playing, and network recovery.
+- Disposal of live `AVPlayerItem` streams while paused, addressing upstream memory-growth issue #11.
+- Timed stream metadata through `AVPlayerItemMetadataOutput`.
+- XCTest coverage for playback stream disposal and recovery.
+- Local signing configuration that keeps personal Apple Developer values out of git.
 
-Copy `Config/Signing.local.example.xcconfig` to `Config/Signing.local.xcconfig`, then set your Apple Developer team ID and bundle IDs in the local file. The local signing file is ignored by git.
+## Requirements
 
-After that, build normally from Xcode or run:
+- An Apple silicon Mac.
+- macOS 12.0 or later.
+- Xcode 27 beta for the currently verified toolchain. Later compatible Xcode versions may also work.
+
+## Build And Test
+
+The application does not currently expose command-line options. The following commands build and test the project itself.
+
+Build an unsigned arm64 Debug application:
+
+```sh
+xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destination 'platform=macOS,arch=arm64' CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build
+```
+
+Run the build smoke test:
+
+```sh
+Scripts/verify-arm64-debug-build.sh
+```
+
+Run the arm64 unit tests without code signing:
+
+```sh
+xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destination 'platform=macOS,arch=arm64' CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO test
+```
+
+Open the project in Xcode:
+
+```sh
+open SomaFM.xcodeproj
+```
+
+Select the `SomaFM` scheme and use Xcode's Run command to launch the application.
+
+## Local Signing
+
+Copy the tracked signing example to the ignored local configuration:
+
+```sh
+cp Config/Signing.local.example.xcconfig Config/Signing.local.xcconfig
+```
+
+Set your Apple Developer team ID and unique app and helper bundle IDs in `Config/Signing.local.xcconfig`. Do not commit that file.
+
+Build with local signing enabled:
 
 ```sh
 xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destination 'platform=macOS,arch=arm64' build
 ```
 
-## Installation
+## Development Workflow
 
-* Download latest version (sandboxed) from [Mac App Store](https://itunes.apple.com/us/app/somafm-miniplayer/id1303140142?mt=12&at=1000lHGx);
-* Download dmg (non-sandboxed) from [releases page](https://github.com/ealeksandrov/SomaFM-miniplayer/releases/latest);
-* Or clone this repo and build it from source.
+Development practices and the required proposal, documentation, testing, commit, and push loop are defined in [AGENTS.md](AGENTS.md). Begin each task by checking repository status and reading the relevant local project context.
 
-### Difference between versions
+Useful repository commands:
 
-In sandboxed (Mac App Store) version Mac Media Keys (⏪⏯⏩) are not supported.
+```sh
+git status --short --branch
+git remote -v
+rg --files
+```
 
-## Author
+## Known Limitations And Next Steps
 
-Created and maintained by Evgeny Aleksandrov ([@ealeksandrov](https://twitter.com/ealeksandrov)).
+- Global media-key support is temporarily disabled while the archived `MediaKeyTap` dependency is replaced or reconsidered.
+- User notifications still use deprecated `NSUserNotification` APIs.
+- Launch-at-login still uses legacy ServiceManagement APIs.
+- Playback lifecycle coverage exists, but model decoding, settings, URL construction, and channel sorting need tests.
+- Long-duration paused memory use still needs an Instruments soak test against upstream issue #11.
+- Signing, notarization, packaging, and release documentation remain to be completed.
+
+## Author And Upstream
+
+This Apple silicon modernization fork is maintained by Matthew Bohl (matthewbohl@gmail.com). It is based on the original application created by Evgeny Aleksandrov ([@ealeksandrov](https://twitter.com/ealeksandrov)).
+
+Upstream repository: [ealeksandrov/SomaFM-miniplayer](https://github.com/ealeksandrov/SomaFM-miniplayer)
+
+Working repository: [matthewbohl/SomaFM-miniplayer-apple-silicon](https://github.com/matthewbohl/SomaFM-miniplayer-apple-silicon)
 
 ## License
 
-`SomaFM miniplayer` is available under the MIT license. See the [LICENSE.md](LICENSE.md) file for more info.
+SomaFM Mini Player is available under the MIT license. See [LICENSE.md](LICENSE.md).
