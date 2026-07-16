@@ -63,6 +63,16 @@ Run the build smoke test:
 
     Scripts/verify-arm64-debug-build.sh
 
+Configure local signing:
+
+    cp Config/Signing.local.example.xcconfig Config/Signing.local.xcconfig
+
+Then edit `Config/Signing.local.xcconfig` with your Apple Developer team ID and bundle IDs. The local signing file is ignored by git and must not be committed.
+
+Build with local signing enabled:
+
+    xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destination 'platform=macOS,arch=arm64' build
+
 Open the project in Xcode:
 
     open SomaFM.xcodeproj
@@ -87,6 +97,7 @@ Current modernization baseline:
 - Reachability.swift was replaced with Network.framework path monitoring.
 - MediaKeyTap was removed from the build for now, so global media key support is temporarily disabled.
 - A no-sign arm64 Debug build succeeds.
+- Signing settings are routed through `Config/Signing.xcconfig`; personal values belong only in ignored `Config/Signing.local.xcconfig`.
 - Remaining known warnings include deprecated NSUserNotification usage, AVPlayerItem timedMetadata usage, and the legacy launch-at-login query path.
 
 Open setup items
@@ -97,4 +108,4 @@ Open setup items
 - Revisit launch-at-login implementation for modern ServiceManagement APIs.
 - Decide whether to restore media key support with maintained source, a local compatibility layer, or a documented non-goal.
 - Add XCTest coverage around model decoding, settings, URL construction, and channel sorting.
-- Add packaging/signing documentation.
+- Add packaging documentation.

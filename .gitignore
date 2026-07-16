@@ -66,3 +66,4 @@ fastlane/test_output/
 *.provisionprofile
 *.cer
 *.p12
+Config/Signing.local.xcconfig

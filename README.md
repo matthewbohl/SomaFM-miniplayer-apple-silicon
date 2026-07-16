@@ -17,6 +17,17 @@ Current notes:
 * Reachability is handled with `Network.framework`.
 * Global media key support is temporarily disabled while the archived `MediaKeyTap` dependency is replaced or reconsidered.
 * A no-sign arm64 Debug build can be verified with `Scripts/verify-arm64-debug-build.sh`.
+* Personal Apple signing values are kept out of git; use `Config/Signing.local.xcconfig` for local signing.
+
+## Local signing
+
+Copy `Config/Signing.local.example.xcconfig` to `Config/Signing.local.xcconfig`, then set your Apple Developer team ID and bundle IDs in the local file. The local signing file is ignored by git.
+
+After that, build normally from Xcode or run:
+
+```sh
+xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destination 'platform=macOS,arch=arm64' build
+```
 
 ## Installation
 

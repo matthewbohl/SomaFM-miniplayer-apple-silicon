@@ -70,6 +70,8 @@
 		558AD6CD1F82BF34000013B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		558AD6D51F82C114000013B1 /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		558AD6D71F82C114000013B1 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		55A000000000000000000001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		55A000000000000000000002 /* Signing.local.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.example.xcconfig; sourceTree = "<group>"; };
 		55B994D01F9E19EB0045844D /* String+Truncate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Truncate.swift"; sourceTree = "<group>"; };
 		55DB7F371F82C488009C3E0E /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		55DB7F391F82C552009C3E0E /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
@@ -110,12 +112,22 @@
 		558AD6A71F82BDD1000013B1 = {
 			isa = PBXGroup;
 			children = (
+				55A000000000000000000003 /* Config */,
 				558AD6C31F82BF2F000013B1 /* Source */,
 				558AD6C61F82BF34000013B1 /* Resources */,
 				558AD6CB1F82BF34000013B1 /* Supporting-files */,
 				558ABBEB1F9F345700F2EAD6 /* SomaFM-helper */,
 				558AD6B11F82BDD1000013B1 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		55A000000000000000000003 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				55A000000000000000000001 /* Signing.xcconfig */,
+				55A000000000000000000002 /* Signing.local.example.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		558AD6B11F82BDD1000013B1 /* Products */ = {
@@ -394,15 +406,17 @@
 /* Begin XCBuildConfiguration section */
 		558ABBF51F9F345700F2EAD6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "SomaFM-helper/SomaFM_helper.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5567X9EQ9Q;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
 				INFOPLIST_FILE = "SomaFM-helper/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ealeksandrov.somafm-helper";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_HELPER_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -410,15 +424,17 @@
 		};
 		558ABBF61F9F345700F2EAD6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "SomaFM-helper/SomaFM_helper.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5567X9EQ9Q;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
 				INFOPLIST_FILE = "SomaFM-helper/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ealeksandrov.somafm-helper";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_HELPER_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -426,6 +442,7 @@
 		};
 		558AD6BE1F82BDD1000013B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -453,7 +470,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -483,6 +500,7 @@
 		};
 		558AD6BF1F82BDD1000013B1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -510,7 +528,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -532,32 +550,38 @@
 		};
 		558AD6C11F82BDD1000013B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Supporting-files/SomaFM.entitlements";
+				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5567X9EQ9Q;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
 				INFOPLIST_FILE = "Supporting-files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ealeksandrov.somafm;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID)";
 				PRODUCT_NAME = "SomaFM miniplayer";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		558AD6C21F82BDD1000013B1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Supporting-files/SomaFM.entitlements";
+				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5567X9EQ9Q;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
 				INFOPLIST_FILE = "Supporting-files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ealeksandrov.somafm;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID)";
 				PRODUCT_NAME = "SomaFM miniplayer";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

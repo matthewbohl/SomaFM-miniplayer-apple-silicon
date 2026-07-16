@@ -1,0 +1,13 @@
+// Shared signing defaults.
+//
+// Do not put personal Apple Developer team IDs or private bundle IDs in this
+// file. Create Config/Signing.local.xcconfig from the example file and put
+// local signing values there instead.
+
+SOMAFM_DEVELOPMENT_TEAM =
+SOMAFM_APP_BUNDLE_ID = dev.local.somafm-miniplayer
+SOMAFM_HELPER_BUNDLE_ID = dev.local.somafm-miniplayer-helper
+SOMAFM_CODE_SIGN_IDENTITY = Apple Development
+SOMAFM_PROVISIONING_PROFILE_SPECIFIER =
+
+#include? "Signing.local.xcconfig"
