@@ -25,7 +25,8 @@ Current modernization work includes:
 - Disposal of live `AVPlayerItem` streams while paused, addressing upstream memory-growth issue #11.
 - Timed stream metadata through `AVPlayerItemMetadataOutput`.
 - Launch at login through the modern `SMAppService` main-application API.
-- XCTest coverage for playback stream disposal, recovery, and launch-at-login state changes.
+- Local track and network alerts through the `UserNotifications` framework with explicit opt-in authorization.
+- XCTest coverage for playback stream disposal, recovery, launch-at-login, and notification behavior.
 - Local signing configuration that keeps personal Apple Developer values out of git.
 
 ## Requirements
@@ -95,7 +96,6 @@ rg --files
 ## Known Limitations And Next Steps
 
 - Global media-key support is temporarily disabled while the archived `MediaKeyTap` dependency is replaced or reconsidered.
-- User notifications still use deprecated `NSUserNotification` APIs.
 - Playback lifecycle coverage exists, but model decoding, settings, URL construction, and channel sorting need tests.
 - Long-duration paused memory use still needs an Instruments soak test against upstream issue #11.
 - Signing, notarization, packaging, and release documentation remain to be completed.

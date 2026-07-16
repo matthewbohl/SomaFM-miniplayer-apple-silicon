@@ -141,7 +141,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <binding destination="KYv-Wp-8ng" name="value" keyPath="values.RadioPlayer.NotificationsEnabled" id="NtZ-dx-BJc"/>
+                                    <action selector="tapNotifications:" target="XfG-lQ-9wD" id="v9M-UN-4Jp"/>
                                 </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mi1-Y2-4N3">
@@ -275,6 +275,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="notificationsButton" destination="n0g-yw-ZC2" id="BT8-kN-A1u"/>
                         <outlet property="startAtLoginButton" destination="SI3-e1-D9B" id="nPV-ty-UpR"/>
                         <outlet property="versionLabel" destination="YzI-gg-fg0" id="irq-2W-iPt"/>
                     </connections>

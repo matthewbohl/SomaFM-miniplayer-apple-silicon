@@ -9,7 +9,8 @@ import Cocoa
 @MainActor
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
-    let menubarController = MenubarController()
+    let notificationService = UserNotificationService()
+    private(set) lazy var menubarController = MenubarController(notificationService: notificationService)
 
     private var prefsWindowController: NSWindowController?
     var preferencesWindowController: NSWindowController? {
@@ -28,7 +29,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Log.info("Starting \(AppDelegate.bundleId) v\(AppDelegate.bundleShortVersion) (\(AppDelegate.bundleVersion))")
 
-        UserDefaults.standard.register(defaults: ["RadioPlayer.NotificationsEnabled": true])
+        UserDefaults.standard.register(defaults: [UserDefaultsKey.notificationsEnabled: false])
+        _ = menubarController
     }
 
     // MARK: - NSWindowDelegate

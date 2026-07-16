@@ -11,6 +11,8 @@ class MenubarController {
     let radioPlayer = RadioPlayer()
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
+    private let notificationService: UserNotificationService
+
     let rightClickMenu = NSMenu()
     let stationsMenu = NSMenu()
 
@@ -28,7 +30,9 @@ class MenubarController {
         }
     }
 
-    init() {
+    init(notificationService: UserNotificationService) {
+        self.notificationService = notificationService
+
         SomaAPI.loadChannels()
 
         setupStatusItem()
@@ -142,7 +146,7 @@ class MenubarController {
         trackItem.target = self
 
         if Settings.notificationsEnabled {
-            showUserNotification()
+            showTrackNotification()
         }
 
         MusicSearchAPI.searchTrack(named: trackName)
@@ -251,14 +255,17 @@ class MenubarController {
         }
     }
 
-    private func showUserNotification() {
+    private func showTrackNotification() {
         guard let trackName = radioPlayer.currentTrack else { return }
         let stationName = SomaAPI.lastPlayedChannel?.title ?? "SomaFM"
 
-        let notification = NSUserNotification()
-        notification.title = stationName
-        notification.informativeText = trackName
-        NSUserNotificationCenter.default.deliver(notification)
+        Task {
+            do {
+                try await notificationService.sendTrackNotification(station: stationName, track: trackName)
+            } catch {
+                Log.error("Unable to deliver track notification: \(error)")
+            }
+        }
     }
 
     // MARK: - Reachability
@@ -312,10 +319,13 @@ class MenubarController {
         }
         setStatusItem(playing: true)
 
-        let notification = NSUserNotification()
-        notification.title = "Network error"
-        notification.informativeText = "Can't connect to SomaFM.com"
-        NSUserNotificationCenter.default.deliver(notification)
+        Task {
+            do {
+                try await notificationService.sendNetworkErrorNotification()
+            } catch {
+                Log.error("Unable to deliver network error notification: \(error)")
+            }
+        }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.setStatusItem(playing: false)
