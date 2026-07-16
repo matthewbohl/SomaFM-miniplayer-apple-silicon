@@ -6,7 +6,6 @@
 
 SOMAFM_DEVELOPMENT_TEAM =
 SOMAFM_APP_BUNDLE_ID = dev.local.somafm-miniplayer
-SOMAFM_HELPER_BUNDLE_ID = dev.local.somafm-miniplayer-helper
 SOMAFM_CODE_SIGN_IDENTITY = Apple Development
 SOMAFM_PROVISIONING_PROFILE_SPECIFIER =
 

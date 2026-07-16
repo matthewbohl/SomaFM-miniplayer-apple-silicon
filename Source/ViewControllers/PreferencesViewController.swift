@@ -4,16 +4,19 @@
 //  Copyright © 2017 Evgeny Aleksandrov. All rights reserved.
 
 import Cocoa
+import ServiceManagement
 
 class PreferencesViewController: NSViewController {
 
     @IBOutlet weak var startAtLoginButton: NSButton!
     @IBOutlet weak var versionLabel: NSTextField!
 
+    private let startAtLogin = StartAtLogin()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        startAtLoginButton.state = StartAtLogin.isEnabled ? .on : .off
+        updateStartAtLoginButton()
 
         if let shortVersionString: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
             let buildVersionString: String = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
@@ -22,10 +25,35 @@ class PreferencesViewController: NSViewController {
     }
 
     @IBAction func tapStartAtLogin(_ sender: NSButton) {
-        StartAtLogin.isEnabled = sender.state == .on
+        do {
+            let status = try startAtLogin.setEnabled(sender.state == .on)
+            updateStartAtLoginButton()
+
+            if status == .requiresApproval {
+                SMAppService.openSystemSettingsLoginItems()
+            }
+        } catch {
+            updateStartAtLoginButton()
+            presentStartAtLoginError(error)
+        }
     }
 
     @IBAction func updateSortOrder(_ sender: NSPopUpButton) {
         NotificationCenter.default.post(name: .somaApiChannelsUpdated, object: nil)
+    }
+
+    private func updateStartAtLoginButton() {
+        startAtLoginButton.state = startAtLogin.isEnabled ? .on : .off
+    }
+
+    private func presentStartAtLoginError(_ error: Error) {
+        let alert = NSAlert(error: error)
+        alert.messageText = "Unable to Update Login Item"
+
+        if let window = view.window {
+            alert.beginSheetModal(for: window)
+        } else {
+            alert.runModal()
+        }
     }
 }

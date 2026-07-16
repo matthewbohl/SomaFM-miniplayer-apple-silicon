@@ -1,7 +1,7 @@
 # SomaFM Mini Player for Apple Silicon
 
 [![License](https://img.shields.io/github/license/matthewbohl/SomaFM-miniplayer-apple-silicon.svg)](LICENSE.md)
-![Platform](https://img.shields.io/badge/platform-macOS%2012%2B-lightgrey.svg)
+![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-lightgrey.svg)
 ![Architecture](https://img.shields.io/badge/architecture-arm64-blue.svg)
 
 ![SomaFM Mini Player](01.jpg)
@@ -12,7 +12,7 @@ This fork modernizes the original [ealeksandrov/SomaFM-miniplayer](https://githu
 
 ## Project Status
 
-The application currently builds and runs natively on arm64 with Xcode 27 beta and targets macOS 12.0 or later. This repository does not yet publish a signed or notarized binary release; build the application from source using the instructions below.
+The application currently builds and runs natively on arm64 with Xcode 27 beta and targets macOS 13.0 or later. This repository does not yet publish a signed or notarized binary release; build the application from source using the instructions below.
 
 Current modernization work includes:
 
@@ -24,13 +24,14 @@ Current modernization work includes:
 - Explicit playback lifecycle states for stopped, buffering, playing, and network recovery.
 - Disposal of live `AVPlayerItem` streams while paused, addressing upstream memory-growth issue #11.
 - Timed stream metadata through `AVPlayerItemMetadataOutput`.
-- XCTest coverage for playback stream disposal and recovery.
+- Launch at login through the modern `SMAppService` main-application API.
+- XCTest coverage for playback stream disposal, recovery, and launch-at-login state changes.
 - Local signing configuration that keeps personal Apple Developer values out of git.
 
 ## Requirements
 
 - An Apple silicon Mac.
-- macOS 12.0 or later.
+- macOS 13.0 or later.
 - Xcode 27 beta for the currently verified toolchain. Later compatible Xcode versions may also work.
 
 ## Build And Test
@@ -71,7 +72,7 @@ Copy the tracked signing example to the ignored local configuration:
 cp Config/Signing.local.example.xcconfig Config/Signing.local.xcconfig
 ```
 
-Set your Apple Developer team ID and unique app and helper bundle IDs in `Config/Signing.local.xcconfig`. Do not commit that file.
+Set your Apple Developer team ID and a unique app bundle ID in `Config/Signing.local.xcconfig`. Do not commit that file.
 
 Build with local signing enabled:
 
@@ -95,7 +96,6 @@ rg --files
 
 - Global media-key support is temporarily disabled while the archived `MediaKeyTap` dependency is replaced or reconsidered.
 - User notifications still use deprecated `NSUserNotification` APIs.
-- Launch-at-login still uses legacy ServiceManagement APIs.
 - Playback lifecycle coverage exists, but model decoding, settings, URL construction, and channel sorting need tests.
 - Long-duration paused memory use still needs an Instruments soak test against upstream issue #11.
 - Signing, notarization, packaging, and release documentation remain to be completed.
