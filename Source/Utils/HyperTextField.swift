@@ -17,11 +17,21 @@ class HyperTextField: NSTextField {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        updateLinkStyle()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+
+        updateLinkStyle()
+    }
+
+    private func updateLinkStyle() {
         let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: NSColor.blue,
+            .foregroundColor: NSColor.linkColor,
             .underlineStyle: NSUnderlineStyle.single.rawValue
         ]
-        self.attributedStringValue = NSAttributedString(string: self.stringValue, attributes: attributes)
+        attributedStringValue = NSAttributedString(string: stringValue, attributes: attributes)
     }
 
     override func mouseDown(with event: NSEvent) {

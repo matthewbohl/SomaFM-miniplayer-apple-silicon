@@ -27,6 +27,7 @@ Current modernization work includes:
 - Launch at login through the modern `SMAppService` main-application API.
 - Local track and network alerts through the `UserNotifications` framework with explicit opt-in authorization.
 - Global media controls and Now Playing metadata through the macOS `MediaPlayer` framework once station playback begins.
+- Automatic Light and Dark appearance support through AppKit semantic colors and template images.
 - XCTest coverage for playback stream disposal, recovery, launch-at-login, notifications, and media controls.
 - Local signing configuration that keeps personal Apple Developer values out of git.
 
