@@ -15,6 +15,7 @@ The goal is to preserve the spirit of the original SomaFM mini player while upda
 - Treat Apple silicon support as a compatibility project, not a rewrite by default.
 - Keep user-facing behavior steady unless the request explicitly changes it.
 - Protect the user's work. Do not overwrite, revert, or discard changes made outside the current task.
+- Keep private developer and machine details out of git. Before every commit, automatically replace accidental team IDs, signing identities, provisioning profile names, local bundle IDs, account names, machine paths, tokens, and credentials with project variables or documented placeholders. Preserve explicitly approved public attribution and contact details.
 - Verify with tests, builds, or the closest practical local check before calling work done.
 - Keep no more than five committed-but-unpushed changes outstanding.
 
@@ -47,9 +48,10 @@ Every implementation task follows this loop:
 8. Update documentation, including `README.md` when project details or command line options change.
 9. Generate or update test cases for changed behavior where practical.
 10. Run relevant verification commands.
-11. Commit completed work.
-12. Push committed work before more than five local commits are outstanding.
-13. Report what changed, how it was verified, and what remains.
+11. Audit the staged diff and tracked configuration for private developer or machine details. Restore project placeholders before committing, without reverting unrelated user changes.
+12. Commit completed work.
+13. Push committed work before more than five local commits are outstanding.
+14. Report what changed, how it was verified, and what remains.
 
 ## Documentation Rules
 
@@ -72,6 +74,7 @@ Every implementation task follows this loop:
 - Push to `https://github.com/matthewbohl/SomaFM-miniplayer-apple-silicon` once remote access is configured.
 - Do not rewrite shared history unless explicitly requested.
 - Do not use destructive git commands without explicit approval.
+- Never commit `Config/Signing.local.xcconfig` or values copied from it. Confirm staged signing settings still use the `SOMAFM_*` variables from `Config/Signing.xcconfig`.
 
 ## Agent Notes
 

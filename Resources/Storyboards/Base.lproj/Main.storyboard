@@ -233,9 +233,6 @@
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="href" value="https://github.com/ealeksandrov/SomaFM-miniplayer"/>
-                                </userDefinedRuntimeAttributes>
                             </textField>
                         </subviews>
                         <constraints>
@@ -276,6 +273,7 @@
                     </view>
                     <connections>
                         <outlet property="notificationsButton" destination="n0g-yw-ZC2" id="BT8-kN-A1u"/>
+                        <outlet property="repositoryLink" destination="JtP-VU-YdH" id="iJ7-KX-ycB"/>
                         <outlet property="startAtLoginButton" destination="SI3-e1-D9B" id="nPV-ty-UpR"/>
                         <outlet property="versionLabel" destination="YzI-gg-fg0" id="irq-2W-iPt"/>
                     </connections>

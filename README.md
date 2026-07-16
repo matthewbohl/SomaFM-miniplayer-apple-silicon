@@ -12,7 +12,7 @@ This fork modernizes the original [ealeksandrov/SomaFM-miniplayer](https://githu
 
 ## Project Status
 
-The application currently builds and runs natively on arm64 with Xcode 27 beta and targets macOS 13.0 or later. This repository does not yet publish a signed or notarized binary release; build the application from source using the instructions below.
+Version 1.3.0 currently builds and runs natively on arm64 with Xcode 27 beta and targets macOS 13.0 or later. This repository does not yet publish a signed or notarized binary release; build the application from source using the instructions below.
 
 Current modernization work includes:
 

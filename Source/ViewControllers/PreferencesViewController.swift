@@ -10,6 +10,7 @@ class PreferencesViewController: NSViewController {
 
     @IBOutlet weak var startAtLoginButton: NSButton!
     @IBOutlet weak var notificationsButton: NSButton!
+    @IBOutlet weak var repositoryLink: HyperTextField!
     @IBOutlet weak var versionLabel: NSTextField!
 
     private let startAtLogin = StartAtLogin()
@@ -23,6 +24,10 @@ class PreferencesViewController: NSViewController {
         if let shortVersionString: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
             let buildVersionString: String = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             versionLabel.stringValue = "Version \(shortVersionString) (\(buildVersionString))"
+        }
+
+        if let repositoryURL = Bundle.main.infoDictionary?["SomaFMRepositoryURL"] as? String {
+            repositoryLink.href = repositoryURL
         }
     }
 
