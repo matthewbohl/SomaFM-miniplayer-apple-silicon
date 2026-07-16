@@ -29,6 +29,7 @@ Current modernization work includes:
 - Global media controls and Now Playing metadata through the macOS `MediaPlayer` framework once station playback begins.
 - Automatic Light and Dark appearance support through AppKit semantic colors and template images.
 - A repository safety check that blocks tracked personal signing values, private signing material, local home paths, and common credential formats.
+- A dedicated release-optimized soak build and unattended playback lifecycle driver with RSS and leak checks.
 - XCTest coverage for playback stream disposal, recovery, launch-at-login, notifications, and media controls.
 - Local signing configuration that keeps personal Apple Developer values out of git.
 
@@ -40,7 +41,7 @@ Current modernization work includes:
 
 ## Build And Test
 
-The application does not currently expose command-line options. The following commands build and test the project itself.
+The normal application does not expose command-line options. The following commands build and test the project itself.
 
 Build an unsigned arm64 Debug application:
 
@@ -65,6 +66,41 @@ Run the arm64 unit tests without code signing:
 ```sh
 xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destination 'platform=macOS,arch=arm64' CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO test
 ```
+
+## Automated Playback Soak Test
+
+The dedicated `Soak` build is release-optimized and compiles in a test-only lifecycle controller. The runner builds it without personal signing, applies a local ad-hoc diagnostic signature, repeatedly exercises play, pause, network wait, recovery, and station navigation, samples resident memory, pauses playback, runs `/usr/bin/leaks`, and exits without human interaction. The diagnostic signature uses only the tracked `Config/Soak.entitlements` file and contains no Apple Developer identity or team information.
+
+Run the standard four-hour test:
+
+```sh
+Scripts/run-playback-soak.sh --duration 4h --cycles 60 --station groovesalad
+```
+
+Run a short harness check before a long soak:
+
+```sh
+Scripts/run-playback-soak.sh --duration 2m --cycles 2 --sample-interval 5
+```
+
+Options:
+
+```text
+--duration VALUE                 Seconds, or a positive integer with s, m, or h suffix
+--cycles COUNT                   Playback lifecycle cycle count
+--station ID                     Initial SomaFM station ID
+--sample-interval SECONDS        Resident-memory sampling interval
+--channel-timeout SECONDS        Channel-list startup timeout
+--leak-timeout SECONDS           Time allowed for the external leak scan
+--max-growth-mb-per-hour VALUE   RSS trend limit after the first 20 percent of samples
+--max-final-growth-mb VALUE      Absolute final paused RSS growth allowance
+--max-final-growth-ratio VALUE   Relative final paused RSS growth allowance
+--max-leaked-bytes BYTES         Maximum total bytes accepted from the leak report
+--results-dir PATH               Result directory instead of a timestamped default
+--help                           Display command help
+```
+
+The default memory thresholds are 1 MB/hour after warmup, final paused growth no greater than the larger of 10 MB or 10 percent of the first paused sample, and at most 65,536 bytes reported by `leaks`. The nonzero leak allowance accommodates small one-time allocations retained by macOS frameworks; the complete report remains available for review, while RSS trend and final paused growth detect accumulating retention. Any lifecycle failure, active stream retained while paused, incomplete leak scan, watchdog timeout, or threshold violation makes the command fail. Results are written beneath the ignored `SoakResults/` directory as `build.log`, `app.log`, `samples.csv`, `leaks.txt`, and `summary.json`.
 
 Open the project in Xcode:
 
@@ -105,7 +141,7 @@ rg --files
 ## Known Limitations And Next Steps
 
 - Playback lifecycle coverage exists, but model decoding, settings, URL construction, and channel sorting need tests.
-- Long-duration paused memory use still needs an Instruments soak test against upstream issue #11.
+- The automated soak test provides repeatable RSS and leak regression coverage; Instruments remains useful for deeper allocation profiling.
 - Signing, notarization, packaging, and release documentation remain to be completed.
 
 ## Author And Upstream

@@ -16,6 +16,7 @@ xcuserdata/
 # Xcode build output
 build/
 DerivedData/
+SoakResults/
 *.hmap
 *.ipa
 *.dSYM.zip

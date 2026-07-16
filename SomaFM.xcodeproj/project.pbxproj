@@ -30,6 +30,9 @@
 		55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000015 /* UserNotificationServiceTests.swift */; };
 		55F000000000000000000016 /* MediaControlsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000017 /* MediaControlsController.swift */; };
 		55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F000000000000000000019 /* MediaControlsControllerTests.swift */; };
+		55F100000000000000000001 /* SoakTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F100000000000000000011 /* SoakTestSupport.swift */; };
+		55F100000000000000000002 /* SoakTestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F100000000000000000012 /* SoakTestController.swift */; };
+		55F100000000000000000003 /* SoakTestSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F100000000000000000013 /* SoakTestSupportTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +74,7 @@
 		558AD6D71F82C114000013B1 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		55A000000000000000000001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		55A000000000000000000002 /* Signing.local.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.example.xcconfig; sourceTree = "<group>"; };
+		55F100000000000000000014 /* Soak.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Soak.entitlements; sourceTree = "<group>"; };
 		55B994D01F9E19EB0045844D /* String+Truncate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Truncate.swift"; sourceTree = "<group>"; };
 		55DB7F371F82C488009C3E0E /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		55DB7F391F82C552009C3E0E /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
@@ -85,6 +89,9 @@
 		55F000000000000000000015 /* UserNotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationServiceTests.swift; sourceTree = "<group>"; };
 		55F000000000000000000017 /* MediaControlsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsController.swift; sourceTree = "<group>"; };
 		55F000000000000000000019 /* MediaControlsControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaControlsControllerTests.swift; sourceTree = "<group>"; };
+		55F100000000000000000011 /* SoakTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoakTestSupport.swift; sourceTree = "<group>"; };
+		55F100000000000000000012 /* SoakTestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoakTestController.swift; sourceTree = "<group>"; };
+		55F100000000000000000013 /* SoakTestSupportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoakTestSupportTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +194,8 @@
 			isa = PBXGroup;
 			children = (
 				55F000000000000000000017 /* MediaControlsController.swift */,
+				55F100000000000000000012 /* SoakTestController.swift */,
+				55F100000000000000000011 /* SoakTestSupport.swift */,
 				558AD6D71F82C114000013B1 /* Log.swift */,
 				55E011391F8579FF00C499D1 /* Settings.swift */,
 				55B994D01F9E19EB0045844D /* String+Truncate.swift */,
@@ -202,6 +211,7 @@
 			children = (
 				55A000000000000000000001 /* Signing.xcconfig */,
 				55A000000000000000000002 /* Signing.local.example.xcconfig */,
+				55F100000000000000000014 /* Soak.entitlements */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -231,6 +241,7 @@
 			children = (
 				55F000000000000000000019 /* MediaControlsControllerTests.swift */,
 				55F000000000000000000002 /* RadioPlayerTests.swift */,
+				55F100000000000000000013 /* SoakTestSupportTests.swift */,
 				55F000000000000000000011 /* StartAtLoginTests.swift */,
 				55F000000000000000000015 /* UserNotificationServiceTests.swift */,
 			);
@@ -376,6 +387,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				55F000000000000000000016 /* MediaControlsController.swift in Sources */,
+				55F100000000000000000002 /* SoakTestController.swift in Sources */,
+				55F100000000000000000001 /* SoakTestSupport.swift in Sources */,
 				55B994D11F9E19EB0045844D /* String+Truncate.swift in Sources */,
 				55EE48761F8400F600D28F25 /* RadioPlayer.swift in Sources */,
 				556877981F83E33800F6B866 /* MenubarController.swift in Sources */,
@@ -400,6 +413,7 @@
 			files = (
 				55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */,
 				55F000000000000000000001 /* RadioPlayerTests.swift in Sources */,
+				55F100000000000000000003 /* SoakTestSupportTests.swift in Sources */,
 				55F000000000000000000010 /* StartAtLoginTests.swift in Sources */,
 				55F000000000000000000014 /* UserNotificationServiceTests.swift in Sources */,
 			);
@@ -536,6 +550,28 @@
 			};
 			name = Release;
 		};
+		55F100000000000000000020 /* Soak */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SOAK_TEST;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Soak;
+		};
 		558AD6C11F82BDD1000013B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
@@ -579,6 +615,28 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
+		};
+		55F100000000000000000021 /* Soak */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Supporting-files/SomaFM.entitlements";
+				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
+				INFOPLIST_FILE = "Supporting-files/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID)";
+				PRODUCT_NAME = "SomaFM miniplayer";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Soak;
 		};
 		55F00000000000000000000A /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -624,6 +682,28 @@
 			};
 			name = Release;
 		};
+		55F100000000000000000022 /* Soak */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55A000000000000000000001 /* Signing.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(SOMAFM_DEVELOPMENT_TEAM)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SomaFM miniplayer.app/Contents/MacOS/SomaFM miniplayer";
+			};
+			name = Soak;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -632,6 +712,7 @@
 			buildConfigurations = (
 				558AD6BE1F82BDD1000013B1 /* Debug */,
 				558AD6BF1F82BDD1000013B1 /* Release */,
+				55F100000000000000000020 /* Soak */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -641,6 +722,7 @@
 			buildConfigurations = (
 				558AD6C11F82BDD1000013B1 /* Debug */,
 				558AD6C21F82BDD1000013B1 /* Release */,
+				55F100000000000000000021 /* Soak */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -650,6 +732,7 @@
 			buildConfigurations = (
 				55F00000000000000000000A /* Debug */,
 				55F00000000000000000000B /* Release */,
+				55F100000000000000000022 /* Soak */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
