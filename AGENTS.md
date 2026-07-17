@@ -14,6 +14,7 @@ The goal is to preserve the spirit of the original SomaFM mini player while upda
 - Document decisions where future contributors will look first.
 - Treat Apple silicon support as a compatibility project, not a rewrite by default.
 - Keep user-facing behavior steady unless the request explicitly changes it.
+- State you assumptions explicitly. Any areas where clarity is needed ask me how we want to handle it. For each question provide a recommendation.
 - Protect the user's work. Do not overwrite, revert, or discard changes made outside the current task.
 - Keep private developer and machine details out of git. Before every commit, automatically replace accidental team IDs, signing identities, provisioning profile names, local bundle IDs, account names, machine paths, tokens, and credentials with project variables or documented placeholders. Preserve explicitly approved public attribution and contact details.
 - Verify with tests, builds, or the closest practical local check before calling work done.
