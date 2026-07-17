@@ -81,6 +81,7 @@ final class SoakTestController {
 
         let analysis = SoakMemoryAnalysis.analyze(samples: samples)
         failures.append(contentsOf: analysis.failures(configuration: configuration))
+        await prepareForLeakCheck()
         await coordinateLeakCheck()
         writeSummary(analysis: analysis)
         Darwin.exit(failures.isEmpty ? EXIT_SUCCESS : EXIT_FAILURE)
@@ -229,6 +230,12 @@ final class SoakTestController {
             try? await Task.sleep(nanoseconds: 500_000_000)
         }
         failures.append("Timed out waiting for the external leak check")
+    }
+
+    private func prepareForLeakCheck() async {
+        // The channel catalog is expected application state, not playback retention.
+        SomaAPI.channels = nil
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
     }
 
     private func writeSummary(analysis: SoakMemoryAnalysis) {

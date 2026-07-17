@@ -14,6 +14,8 @@ max_growth_per_hour="1"
 max_final_growth="10"
 max_final_ratio="0.10"
 max_leaked_bytes="65536"
+max_stream_url_roots_per_start="1.5"
+max_stream_url_root_overhead="5"
 results_dir=""
 
 usage() {
@@ -24,13 +26,17 @@ Options:
   --duration VALUE                 Total run time in seconds, or with m/h suffix (default: 4h)
   --cycles COUNT                   Number of playback lifecycle cycles (default: 60)
   --station ID                     Initial SomaFM station ID (default: groovesalad)
-  --sample-interval SECONDS        RSS sampling interval (default: 60)
+  --sample-interval SECONDS        Process-memory sampling interval (default: 60)
   --channel-timeout SECONDS        Channel-list startup timeout (default: 60)
   --leak-timeout SECONDS           External leak-check timeout (default: 120)
-  --max-growth-mb-per-hour VALUE   Maximum RSS trend after warmup (default: 1)
-  --max-final-growth-mb VALUE      Minimum final paused RSS allowance (default: 10)
-  --max-final-growth-ratio VALUE   Relative final paused RSS allowance (default: 0.10)
+  --max-growth-mb-per-hour VALUE   Maximum footprint trend after warmup (default: 1)
+  --max-final-growth-mb VALUE      Minimum final paused footprint allowance (default: 10)
+  --max-final-growth-ratio VALUE   Relative final paused footprint allowance (default: 0.10)
   --max-leaked-bytes BYTES         Maximum bytes reported by leaks (default: 65536)
+  --max-stream-url-roots-per-start VALUE
+                                     Maximum URL-root ratio (default: 1.5)
+  --max-stream-url-root-overhead COUNT
+                                     Fixed roots allowed beyond the ratio (default: 5)
   --results-dir PATH               Result directory (default: timestamp under SoakResults)
   --help                           Show this help
 EOF
@@ -56,6 +62,8 @@ while [ "$#" -gt 0 ]; do
         --max-final-growth-mb) require_value "$@"; max_final_growth="$2"; shift 2 ;;
         --max-final-growth-ratio) require_value "$@"; max_final_ratio="$2"; shift 2 ;;
         --max-leaked-bytes) require_value "$@"; max_leaked_bytes="$2"; shift 2 ;;
+        --max-stream-url-roots-per-start) require_value "$@"; max_stream_url_roots_per_start="$2"; shift 2 ;;
+        --max-stream-url-root-overhead) require_value "$@"; max_stream_url_root_overhead="$2"; shift 2 ;;
         --results-dir) require_value "$@"; results_dir="$2"; shift 2 ;;
         --help) usage; exit 0 ;;
         *) echo "error: unknown option: $1" >&2; usage >&2; exit 2 ;;
@@ -92,6 +100,13 @@ fi
 case "$max_leaked_bytes" in
     ''|*[!0-9]*) echo "error: --max-leaked-bytes must be a nonnegative integer" >&2; exit 2 ;;
 esac
+case "$max_stream_url_root_overhead" in
+    ''|*[!0-9]*) echo "error: --max-stream-url-root-overhead must be a nonnegative integer" >&2; exit 2 ;;
+esac
+if ! awk -v value="$max_stream_url_roots_per_start" 'BEGIN { exit !(value ~ /^[0-9]+([.][0-9]+)?$/ && value > 0) }'; then
+    echo "error: --max-stream-url-roots-per-start must be a positive number" >&2
+    exit 2
+fi
 
 if [ -z "$results_dir" ]; then
     results_dir="SoakResults/$(date '+%Y%m%d-%H%M%S')"
@@ -183,12 +198,23 @@ app_status=$?
 app_pid=""
 
 leaked_bytes=$(awk '/leaks for [0-9]+ total leaked bytes/ { for (i = 1; i <= NF; i++) if ($i == "total") print $(i - 1) }' "$results_dir/leaks.txt" | tail -1)
+stream_url_roots=$(awk '/ROOT LEAK: <CFString .*https:\/\/ice[0-9]+\.somafm\.com\// { count++ } END { print count + 0 }' "$results_dir/leaks.txt")
+stream_starts=$(awk -F, 'NR > 1 { starts = $8 } END { print starts + 0 }' "$results_dir/samples.csv")
+max_stream_url_roots=$(awk \
+    -v starts="$stream_starts" \
+    -v ratio="$max_stream_url_roots_per_start" \
+    -v overhead="$max_stream_url_root_overhead" \
+    'BEGIN { scaled = starts * ratio; ceiling = int(scaled); if (ceiling < scaled) ceiling++; print ceiling + overhead }')
 if [ -z "$leaked_bytes" ] || grep -q -e 'not debuggable' -e 'Failed to map remote region' "$results_dir/leaks.txt"; then
     echo "error: leak check could not inspect the complete process" >&2
     exit 1
 fi
 if [ "$leaked_bytes" -gt "$max_leaked_bytes" ]; then
     echo "error: leak check reported $leaked_bytes bytes; limit is $max_leaked_bytes" >&2
+    exit 1
+fi
+if [ "$stream_url_roots" -gt "$max_stream_url_roots" ]; then
+    echo "error: leak check reported $stream_url_roots SomaFM stream URL roots after $stream_starts starts; limit is $max_stream_url_roots" >&2
     exit 1
 fi
 if [ "$app_status" -ne 0 ]; then
@@ -200,4 +226,4 @@ if [ ! -f "$results_dir/summary.json" ] || ! grep -q '"passed" : true' "$results
     exit 1
 fi
 
-echo "Soak test passed with $leaked_bytes leaked bytes reported. Results: $results_dir"
+echo "Soak test passed with $leaked_bytes leaked bytes and $stream_url_roots stream URL roots after $stream_starts starts. Results: $results_dir"

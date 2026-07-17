@@ -69,7 +69,7 @@ xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destin
 
 ## Automated Playback Soak Test
 
-The dedicated `Soak` build is release-optimized and compiles in a test-only lifecycle controller. The runner builds it without personal signing, applies a local ad-hoc diagnostic signature, repeatedly exercises play, pause, network wait, recovery, and station navigation, samples physical footprint and resident memory, pauses playback, runs `/usr/bin/leaks`, and exits without human interaction. The diagnostic signature uses only the tracked `Config/Soak.entitlements` file and contains no Apple Developer identity or team information.
+The dedicated `Soak` build is release-optimized and compiles in a test-only lifecycle controller. The runner builds it without personal signing, applies a local ad-hoc diagnostic signature, repeatedly exercises play, pause, network wait, recovery, and station navigation, samples physical footprint and resident memory, pauses playback, releases the channel catalog, runs `/usr/bin/leaks`, and exits without human interaction. Releasing the catalog keeps its intentionally live playlist URLs out of the playback-retention report. The diagnostic signature uses only the tracked `Config/Soak.entitlements` file and contains no Apple Developer identity or team information.
 
 Run the standard four-hour test:
 
@@ -96,11 +96,15 @@ Options:
 --max-final-growth-mb VALUE      Absolute final paused footprint growth allowance
 --max-final-growth-ratio VALUE   Relative final paused footprint growth allowance
 --max-leaked-bytes BYTES         Maximum total bytes accepted from the leak report
+--max-stream-url-roots-per-start VALUE
+                                   Maximum stream URL roots per stream start
+--max-stream-url-root-overhead COUNT
+                                   Fixed stream URL roots allowed beyond the ratio
 --results-dir PATH               Result directory instead of a timestamped default
 --help                           Display command help
 ```
 
-The default memory thresholds are 1 MB/hour of physical-footprint growth after warmup, final paused footprint growth no greater than the larger of 10 MB or 10 percent of the first paused sample, and at most 65,536 bytes reported by `leaks`. Physical footprint is the pass/fail metric because it better represents the process's private memory cost; RSS remains in the CSV and summary for diagnosis. Stream start and disposal counters are also recorded so lifecycle imbalances are visible. The nonzero leak allowance accommodates small one-time allocations retained by macOS frameworks. Any lifecycle failure, active stream retained while paused, incomplete leak scan, watchdog timeout, or threshold violation makes the command fail. Results are written beneath the ignored `SoakResults/` directory as `build.log`, `app.log`, `samples.csv`, `leaks.txt`, and `summary.json`.
+The default memory thresholds are 1 MB/hour of physical-footprint growth after warmup, final paused footprint growth no greater than the larger of 10 MB or 10 percent of the first paused sample, and at most 65,536 bytes reported by `leaks`. After catalog cleanup, the runner also permits up to 1.5 small AVFoundation URL roots per stream start plus five fixed roots; exceeding that lifecycle-adjusted bound indicates superlinear or unrelated URL retention. Physical footprint is the pass/fail metric because it better represents the process's private memory cost; RSS remains in the CSV and summary for diagnosis. Stream start and disposal counters are also recorded so lifecycle imbalances are visible. The nonzero byte allowance accommodates small one-time allocations retained by macOS frameworks. Any lifecycle failure, active stream retained while paused, incomplete leak scan, watchdog timeout, or threshold violation makes the command fail. Results are written beneath the ignored `SoakResults/` directory as `build.log`, `app.log`, `samples.csv`, `leaks.txt`, and `summary.json`.
 
 Open the project in Xcode:
 
