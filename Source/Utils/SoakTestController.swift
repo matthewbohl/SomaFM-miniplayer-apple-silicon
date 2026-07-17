@@ -5,6 +5,11 @@ import Foundation
 
 @MainActor
 final class SoakTestController {
+    private struct MemorySnapshot {
+        let residentBytes: UInt64
+        let physicalFootprintBytes: UInt64
+    }
+
     private struct Summary: Codable {
         let passed: Bool
         let stationID: String
@@ -144,46 +149,73 @@ final class SoakTestController {
         let url = configuration.resultsDirectory.appendingPathComponent("samples.csv")
         fileManager.createFile(atPath: url.path, contents: nil)
         csvHandle = try FileHandle(forWritingTo: url)
-        writeCSV("elapsed_seconds,resident_bytes,phase,cycle,player_state,has_active_player_item\n")
+        writeCSV(
+            "elapsed_seconds,resident_bytes,physical_footprint_bytes,phase,cycle,player_state," +
+            "has_active_player_item,stream_start_count,stream_discard_count\n"
+        )
     }
 
     private func recordSample(phase: String, cycle: Int) {
-        guard let residentBytes = residentMemoryBytes() else {
-            failures.append("Unable to read resident memory")
+        guard let memory = memorySnapshot() else {
+            failures.append("Unable to read process memory metrics")
             return
         }
 
         let sample = SoakMemorySample(
             elapsedSeconds: Date().timeIntervalSince(startDate),
-            residentBytes: residentBytes,
+            residentBytes: memory.residentBytes,
+            physicalFootprintBytes: memory.physicalFootprintBytes,
             phase: phase,
             cycle: cycle,
             playerState: String(describing: menubarController.radioPlayer.state),
-            hasActivePlayerItem: menubarController.radioPlayer.hasActivePlayerItem
+            hasActivePlayerItem: menubarController.radioPlayer.hasActivePlayerItem,
+            streamStartCount: menubarController.radioPlayer.streamStartCount,
+            streamDiscardCount: menubarController.radioPlayer.streamDiscardCount
         )
         samples.append(sample)
         writeCSV(
-            "\(sample.elapsedSeconds),\(sample.residentBytes),\(sample.phase),\(sample.cycle)," +
-            "\(sample.playerState),\(sample.hasActivePlayerItem)\n"
+            "\(sample.elapsedSeconds),\(sample.residentBytes),\(sample.physicalFootprintBytes)," +
+            "\(sample.phase),\(sample.cycle),\(sample.playerState),\(sample.hasActivePlayerItem)," +
+            "\(sample.streamStartCount),\(sample.streamDiscardCount)\n"
         )
     }
 
-    private func residentMemoryBytes() -> UInt64? {
-        var info = mach_task_basic_info()
-        var count = mach_msg_type_number_t(
+    private func memorySnapshot() -> MemorySnapshot? {
+        var basicInfo = mach_task_basic_info()
+        var basicInfoCount = mach_msg_type_number_t(
             MemoryLayout<mach_task_basic_info_data_t>.size / MemoryLayout<natural_t>.size
         )
-        let result = withUnsafeMutablePointer(to: &info) { pointer in
-            pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { reboundPointer in
+        let basicInfoResult = withUnsafeMutablePointer(to: &basicInfo) { pointer in
+            pointer.withMemoryRebound(to: integer_t.self, capacity: Int(basicInfoCount)) { reboundPointer in
                 task_info(
                     mach_task_self_,
                     task_flavor_t(MACH_TASK_BASIC_INFO),
                     reboundPointer,
-                    &count
+                    &basicInfoCount
                 )
             }
         }
-        return result == KERN_SUCCESS ? UInt64(info.resident_size) : nil
+
+        var vmInfo = task_vm_info_data_t()
+        var vmInfoCount = mach_msg_type_number_t(
+            MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<natural_t>.size
+        )
+        let vmInfoResult = withUnsafeMutablePointer(to: &vmInfo) { pointer in
+            pointer.withMemoryRebound(to: integer_t.self, capacity: Int(vmInfoCount)) { reboundPointer in
+                task_info(
+                    mach_task_self_,
+                    task_flavor_t(TASK_VM_INFO),
+                    reboundPointer,
+                    &vmInfoCount
+                )
+            }
+        }
+
+        guard basicInfoResult == KERN_SUCCESS, vmInfoResult == KERN_SUCCESS else { return nil }
+        return MemorySnapshot(
+            residentBytes: UInt64(basicInfo.resident_size),
+            physicalFootprintBytes: UInt64(vmInfo.phys_footprint)
+        )
     }
 
     private func coordinateLeakCheck() async {

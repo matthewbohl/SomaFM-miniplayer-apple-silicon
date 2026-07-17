@@ -81,21 +81,61 @@ struct SoakTestConfiguration: Equatable {
 struct SoakMemorySample: Codable, Equatable {
     let elapsedSeconds: TimeInterval
     let residentBytes: UInt64
+    let physicalFootprintBytes: UInt64
     let phase: String
     let cycle: Int
     let playerState: String
     let hasActivePlayerItem: Bool
+    let streamStartCount: Int
+    let streamDiscardCount: Int
 }
 
-struct SoakMemoryAnalysis: Codable, Equatable {
+struct SoakMemoryMetricAnalysis: Codable, Equatable {
     let growthBytesPerHour: Double
     let baselinePausedBytes: UInt64?
     let finalPausedBytes: UInt64?
     let finalPausedGrowthBytes: UInt64?
+}
+
+struct SoakMemoryAnalysis: Codable, Equatable {
+    let resident: SoakMemoryMetricAnalysis
+    let physicalFootprint: SoakMemoryMetricAnalysis
 
     static func analyze(samples: [SoakMemorySample], warmupFraction: Double = 0.20) -> SoakMemoryAnalysis {
+        SoakMemoryAnalysis(
+            resident: analyzeMetric(samples: samples, warmupFraction: warmupFraction, value: \.residentBytes),
+            physicalFootprint: analyzeMetric(
+                samples: samples,
+                warmupFraction: warmupFraction,
+                value: \.physicalFootprintBytes
+            )
+        )
+    }
+
+    func failures(configuration: SoakTestConfiguration) -> [String] {
+        var failures: [String] = []
+
+        if physicalFootprint.growthBytesPerHour > configuration.maximumGrowthBytesPerHour {
+            failures.append("Physical-footprint growth exceeded the configured per-hour limit")
+        }
+
+        if let baseline = physicalFootprint.baselinePausedBytes,
+           let finalGrowth = physicalFootprint.finalPausedGrowthBytes {
+            let ratioLimit = UInt64(Double(baseline) * configuration.maximumFinalGrowthRatio)
+            let permittedGrowth = max(configuration.maximumFinalGrowthBytes, ratioLimit)
+            if finalGrowth > permittedGrowth {
+                failures.append("Final paused physical footprint exceeded the configured growth limit")
+            }
+        }
+
+        return failures
+    }
+
+    private static func analyzeMetric(samples: [SoakMemorySample],
+                                      warmupFraction: Double,
+                                      value: KeyPath<SoakMemorySample, UInt64>) -> SoakMemoryMetricAnalysis {
         guard let lastElapsed = samples.last?.elapsedSeconds else {
-            return SoakMemoryAnalysis(
+            return SoakMemoryMetricAnalysis(
                 growthBytesPerHour: 0,
                 baselinePausedBytes: nil,
                 finalPausedBytes: nil,
@@ -105,15 +145,15 @@ struct SoakMemoryAnalysis: Codable, Equatable {
 
         let warmupEnd = lastElapsed * warmupFraction
         let measuredSamples = samples.filter { $0.elapsedSeconds >= warmupEnd }
-        let growth = linearGrowthBytesPerHour(samples: measuredSamples)
+        let growth = linearGrowthBytesPerHour(samples: measuredSamples, value: value)
         let pausedSamples = samples.filter { $0.phase == "paused" }
-        let baseline = pausedSamples.first?.residentBytes
-        let final = pausedSamples.last?.residentBytes
+        let baseline = pausedSamples.first.map { $0[keyPath: value] }
+        let final = pausedSamples.last.map { $0[keyPath: value] }
         let finalGrowth = baseline.flatMap { baselineBytes in
             final.map { $0 > baselineBytes ? $0 - baselineBytes : 0 }
         }
 
-        return SoakMemoryAnalysis(
+        return SoakMemoryMetricAnalysis(
             growthBytesPerHour: growth,
             baselinePausedBytes: baseline,
             finalPausedBytes: final,
@@ -121,31 +161,14 @@ struct SoakMemoryAnalysis: Codable, Equatable {
         )
     }
 
-    func failures(configuration: SoakTestConfiguration) -> [String] {
-        var failures: [String] = []
-
-        if growthBytesPerHour > configuration.maximumGrowthBytesPerHour {
-            failures.append("RSS growth exceeded the configured per-hour limit")
-        }
-
-        if let baseline = baselinePausedBytes, let finalGrowth = finalPausedGrowthBytes {
-            let ratioLimit = UInt64(Double(baseline) * configuration.maximumFinalGrowthRatio)
-            let permittedGrowth = max(configuration.maximumFinalGrowthBytes, ratioLimit)
-            if finalGrowth > permittedGrowth {
-                failures.append("Final paused RSS exceeded the configured growth limit")
-            }
-        }
-
-        return failures
-    }
-
-    private static func linearGrowthBytesPerHour(samples: [SoakMemorySample]) -> Double {
+    private static func linearGrowthBytesPerHour(samples: [SoakMemorySample],
+                                                 value: KeyPath<SoakMemorySample, UInt64>) -> Double {
         guard samples.count > 1 else { return 0 }
 
         let meanTime = samples.map(\.elapsedSeconds).reduce(0, +) / Double(samples.count)
-        let meanBytes = samples.map { Double($0.residentBytes) }.reduce(0, +) / Double(samples.count)
+        let meanBytes = samples.map { Double($0[keyPath: value]) }.reduce(0, +) / Double(samples.count)
         let numerator = samples.reduce(0.0) { result, sample in
-            result + (sample.elapsedSeconds - meanTime) * (Double(sample.residentBytes) - meanBytes)
+            result + (sample.elapsedSeconds - meanTime) * (Double(sample[keyPath: value]) - meanBytes)
         }
         let denominator = samples.reduce(0.0) { result, sample in
             result + pow(sample.elapsedSeconds - meanTime, 2)

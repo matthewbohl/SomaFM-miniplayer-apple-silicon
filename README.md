@@ -29,7 +29,7 @@ Current modernization work includes:
 - Global media controls and Now Playing metadata through the macOS `MediaPlayer` framework once station playback begins.
 - Automatic Light and Dark appearance support through AppKit semantic colors and template images.
 - A repository safety check that blocks tracked personal signing values, private signing material, local home paths, and common credential formats.
-- A dedicated release-optimized soak build and unattended playback lifecycle driver with RSS and leak checks.
+- A dedicated release-optimized soak build and unattended playback lifecycle driver with physical-footprint, RSS, and leak checks.
 - XCTest coverage for playback stream disposal, recovery, launch-at-login, notifications, and media controls.
 - Local signing configuration that keeps personal Apple Developer values out of git.
 
@@ -69,7 +69,7 @@ xcodebuild -project SomaFM.xcodeproj -scheme SomaFM -configuration Debug -destin
 
 ## Automated Playback Soak Test
 
-The dedicated `Soak` build is release-optimized and compiles in a test-only lifecycle controller. The runner builds it without personal signing, applies a local ad-hoc diagnostic signature, repeatedly exercises play, pause, network wait, recovery, and station navigation, samples resident memory, pauses playback, runs `/usr/bin/leaks`, and exits without human interaction. The diagnostic signature uses only the tracked `Config/Soak.entitlements` file and contains no Apple Developer identity or team information.
+The dedicated `Soak` build is release-optimized and compiles in a test-only lifecycle controller. The runner builds it without personal signing, applies a local ad-hoc diagnostic signature, repeatedly exercises play, pause, network wait, recovery, and station navigation, samples physical footprint and resident memory, pauses playback, runs `/usr/bin/leaks`, and exits without human interaction. The diagnostic signature uses only the tracked `Config/Soak.entitlements` file and contains no Apple Developer identity or team information.
 
 Run the standard four-hour test:
 
@@ -89,18 +89,18 @@ Options:
 --duration VALUE                 Seconds, or a positive integer with s, m, or h suffix
 --cycles COUNT                   Playback lifecycle cycle count
 --station ID                     Initial SomaFM station ID
---sample-interval SECONDS        Resident-memory sampling interval
+--sample-interval SECONDS        Process-memory sampling interval
 --channel-timeout SECONDS        Channel-list startup timeout
 --leak-timeout SECONDS           Time allowed for the external leak scan
---max-growth-mb-per-hour VALUE   RSS trend limit after the first 20 percent of samples
---max-final-growth-mb VALUE      Absolute final paused RSS growth allowance
---max-final-growth-ratio VALUE   Relative final paused RSS growth allowance
+--max-growth-mb-per-hour VALUE   Physical-footprint trend limit after warmup
+--max-final-growth-mb VALUE      Absolute final paused footprint growth allowance
+--max-final-growth-ratio VALUE   Relative final paused footprint growth allowance
 --max-leaked-bytes BYTES         Maximum total bytes accepted from the leak report
 --results-dir PATH               Result directory instead of a timestamped default
 --help                           Display command help
 ```
 
-The default memory thresholds are 1 MB/hour after warmup, final paused growth no greater than the larger of 10 MB or 10 percent of the first paused sample, and at most 65,536 bytes reported by `leaks`. The nonzero leak allowance accommodates small one-time allocations retained by macOS frameworks; the complete report remains available for review, while RSS trend and final paused growth detect accumulating retention. Any lifecycle failure, active stream retained while paused, incomplete leak scan, watchdog timeout, or threshold violation makes the command fail. Results are written beneath the ignored `SoakResults/` directory as `build.log`, `app.log`, `samples.csv`, `leaks.txt`, and `summary.json`.
+The default memory thresholds are 1 MB/hour of physical-footprint growth after warmup, final paused footprint growth no greater than the larger of 10 MB or 10 percent of the first paused sample, and at most 65,536 bytes reported by `leaks`. Physical footprint is the pass/fail metric because it better represents the process's private memory cost; RSS remains in the CSV and summary for diagnosis. Stream start and disposal counters are also recorded so lifecycle imbalances are visible. The nonzero leak allowance accommodates small one-time allocations retained by macOS frameworks. Any lifecycle failure, active stream retained while paused, incomplete leak scan, watchdog timeout, or threshold violation makes the command fail. Results are written beneath the ignored `SoakResults/` directory as `build.log`, `app.log`, `samples.csv`, `leaks.txt`, and `summary.json`.
 
 Open the project in Xcode:
 

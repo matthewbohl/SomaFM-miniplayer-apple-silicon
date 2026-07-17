@@ -19,6 +19,23 @@ final class RadioPlayerTests: XCTestCase {
 
         XCTAssertEqual(radioPlayer.state, .stopped)
         XCTAssertFalse(radioPlayer.hasActivePlayerItem)
+        XCTAssertEqual(radioPlayer.streamStartCount, 1)
+        XCTAssertEqual(radioPlayer.streamDiscardCount, 1)
+    }
+
+    func testPauseCancelsPendingStreamLoading() throws {
+        var cancelledItem: AVPlayerItem?
+        let radioPlayer = RadioPlayer(
+            player: AVPlayer(),
+            streamCancellationHandler: { cancelledItem = $0 }
+        )
+
+        radioPlayer.play(channel: try makeChannel())
+        XCTAssertNil(cancelledItem)
+        radioPlayer.pause()
+
+        XCTAssertNotNil(cancelledItem)
+        XCTAssertEqual(radioPlayer.streamDiscardCount, 1)
     }
 
     func testNetworkWaitDiscardsItemAndResumesLive() throws {

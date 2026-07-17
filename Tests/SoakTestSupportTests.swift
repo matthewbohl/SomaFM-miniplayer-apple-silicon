@@ -37,10 +37,11 @@ final class SoakTestSupportTests: XCTestCase {
 
         let analysis = SoakMemoryAnalysis.analyze(samples: samples, warmupFraction: 0)
 
-        XCTAssertEqual(analysis.growthBytesPerHour, 1_000, accuracy: 0.001)
-        XCTAssertEqual(analysis.baselinePausedBytes, 10_000)
-        XCTAssertEqual(analysis.finalPausedBytes, 11_000)
-        XCTAssertEqual(analysis.finalPausedGrowthBytes, 1_000)
+        XCTAssertEqual(analysis.resident.growthBytesPerHour, 1_000, accuracy: 0.001)
+        XCTAssertEqual(analysis.resident.baselinePausedBytes, 10_000)
+        XCTAssertEqual(analysis.resident.finalPausedBytes, 11_000)
+        XCTAssertEqual(analysis.resident.finalPausedGrowthBytes, 1_000)
+        XCTAssertEqual(analysis.physicalFootprint.growthBytesPerHour, 500, accuracy: 0.001)
     }
 
     func testMemoryAnalysisReportsThresholdFailures() throws {
@@ -51,10 +52,18 @@ final class SoakTestSupportTests: XCTestCase {
             "SOMAFM_SOAK_MAX_FINAL_GROWTH_RATIO": "0.01"
         ])
         let analysis = SoakMemoryAnalysis(
-            growthBytesPerHour: 1_000,
-            baselinePausedBytes: 10_000,
-            finalPausedBytes: 11_000,
-            finalPausedGrowthBytes: 1_000
+            resident: SoakMemoryMetricAnalysis(
+                growthBytesPerHour: 100_000,
+                baselinePausedBytes: 10_000,
+                finalPausedBytes: 110_000,
+                finalPausedGrowthBytes: 100_000
+            ),
+            physicalFootprint: SoakMemoryMetricAnalysis(
+                growthBytesPerHour: 1_000,
+                baselinePausedBytes: 10_000,
+                finalPausedBytes: 11_000,
+                finalPausedGrowthBytes: 1_000
+            )
         )
 
         XCTAssertEqual(analysis.failures(configuration: configuration).count, 2)
@@ -64,10 +73,13 @@ final class SoakTestSupportTests: XCTestCase {
         SoakMemorySample(
             elapsedSeconds: seconds,
             residentBytes: bytes,
+            physicalFootprintBytes: bytes / 2,
             phase: phase,
             cycle: 1,
             playerState: "stopped",
-            hasActivePlayerItem: false
+            hasActivePlayerItem: false,
+            streamStartCount: 1,
+            streamDiscardCount: 1
         )
     }
 }

@@ -13,6 +13,8 @@ extension Notification.Name {
 
 @MainActor
 final class RadioPlayer: NSObject {
+    typealias StreamCancellationHandler = @MainActor (AVPlayerItem) -> Void
+
     enum State: Equatable {
         case stopped
         case buffering
@@ -21,8 +23,12 @@ final class RadioPlayer: NSObject {
     }
 
     private let player: AVPlayer
+    private let streamCancellationHandler: StreamCancellationHandler
     private var metadataOutput: AVPlayerItemMetadataOutput?
     private var timeControlStatusToken: NSKeyValueObservation?
+
+    private(set) var streamStartCount = 0
+    private(set) var streamDiscardCount = 0
 
     private(set) var state: State = .stopped {
         didSet {
@@ -51,8 +57,13 @@ final class RadioPlayer: NSObject {
         player.currentItem != nil
     }
 
-    init(player: AVPlayer = AVPlayer()) {
+    init(player: AVPlayer = AVPlayer(),
+         streamCancellationHandler: @escaping StreamCancellationHandler = { playerItem in
+             playerItem.cancelPendingSeeks()
+             playerItem.asset.cancelLoading()
+         }) {
         self.player = player
+        self.streamCancellationHandler = streamCancellationHandler
         super.init()
 
         player.volume = Settings.volume
@@ -103,19 +114,28 @@ final class RadioPlayer: NSObject {
         self.metadataOutput = metadataOutput
         state = .buffering
         player.replaceCurrentItem(with: playerItem)
+        streamStartCount += 1
         player.play()
     }
 
     private func discardCurrentStream() {
         player.pause()
 
-        if let metadataOutput = metadataOutput, let currentItem = player.currentItem {
+        guard let currentItem = player.currentItem else {
+            metadataOutput = nil
+            currentTrack = nil
+            return
+        }
+
+        if let metadataOutput = metadataOutput {
             metadataOutput.setDelegate(nil, queue: nil)
             currentItem.remove(metadataOutput)
         }
 
         metadataOutput = nil
+        streamCancellationHandler(currentItem)
         player.replaceCurrentItem(with: nil)
+        streamDiscardCount += 1
         currentTrack = nil
     }
 
