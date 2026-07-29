@@ -14,6 +14,7 @@
 		5576EB301F9F65AA00F30FB9 /* StartAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576EB2F1F9F65AA00F30FB9 /* StartAtLogin.swift */; };
 		558AD6CE1F82BF63000013B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558AD6CA1F82BF34000013B1 /* Assets.xcassets */; };
 		558AD6CF1F82BF69000013B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 558AD6C81F82BF34000013B1 /* Main.storyboard */; };
+		55A000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 55A000000000000000000004 /* PrivacyInfo.xcprivacy */; };
 		558AD6D11F82BF6F000013B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558AD6C51F82BF2F000013B1 /* AppDelegate.swift */; };
 		558AD6D81F82C116000013B1 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558AD6D71F82C114000013B1 /* Log.swift */; };
 		558AD6D91F82C119000013B1 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558AD6D51F82C114000013B1 /* PreferencesViewController.swift */; };
@@ -70,6 +71,7 @@
 		558AD6CA1F82BF34000013B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		558AD6CC1F82BF34000013B1 /* SomaFM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SomaFM.entitlements; sourceTree = "<group>"; };
 		558AD6CD1F82BF34000013B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		55A000000000000000000004 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		558AD6D51F82C114000013B1 /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		558AD6D71F82C114000013B1 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		55A000000000000000000001 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 			children = (
 				558AD6CC1F82BF34000013B1 /* SomaFM.entitlements */,
 				558AD6CD1F82BF34000013B1 /* Info.plist */,
+				55A000000000000000000004 /* PrivacyInfo.xcprivacy */,
 			);
 			path = "Supporting-files";
 			sourceTree = "<group>";
@@ -258,7 +261,6 @@
 				558AD6AC1F82BDD1000013B1 /* Sources */,
 				558AD6AD1F82BDD1000013B1 /* Frameworks */,
 				558AD6AE1F82BDD1000013B1 /* Resources */,
-				558AD6D21F82C077000013B1 /* ShellScript */,
 				558AD6D31F82C09D000013B1 /* ShellScript */,
 				55871A161F9D294700201637 /* Embed Frameworks */,
 			);
@@ -340,6 +342,7 @@
 			files = (
 				558AD6CE1F82BF63000013B1 /* Assets.xcassets in Resources */,
 				558AD6CF1F82BF69000013B1 /* Main.storyboard in Resources */,
+				55A000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,19 +356,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		558AD6D21F82C077000013B1 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "git=`sh /etc/profile; which git`\ncommits_count=`${git} rev-list --count HEAD 2>/dev/null || echo 1`\n\nfilepath=\"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n\necho \"Updating ${filepath}\"\necho \"Current version build ${commits_count}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion ${commits_count}\" \"${filepath}\" || /usr/libexec/PlistBuddy -c \"Add :CFBundleVersion string ${commits_count}\" \"${filepath}\"";
-		};
 		558AD6D31F82C09D000013B1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -473,6 +463,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -491,6 +482,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.3.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -531,6 +523,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -543,6 +536,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.3.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -559,11 +553,13 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.3.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SOAK_TEST;
@@ -651,7 +647,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
@@ -673,7 +669,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";
@@ -695,7 +691,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(SOMAFM_APP_BUNDLE_ID).tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "$(SOMAFM_PROVISIONING_PROFILE_SPECIFIER)";

@@ -1,0 +1,33 @@
+name: Build and Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  stable-xcode:
+    runs-on: macos-26
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: xcodebuild -version
+
+      - name: Check public repository safety
+        run: Scripts/check-public-repo-safety.sh
+
+      - name: Run unit tests
+        run: |
+          xcodebuild \
+            -project SomaFM.xcodeproj \
+            -scheme SomaFM \
+            -configuration Debug \
+            -destination 'platform=macOS,arch=arm64' \
+            CODE_SIGN_IDENTITY= \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            test
+
+      - name: Verify universal Release build
+        run: Scripts/verify-universal-release-build.sh

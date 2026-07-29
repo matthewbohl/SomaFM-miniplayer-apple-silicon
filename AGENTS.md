@@ -4,7 +4,7 @@
 
 We are a pair programming team modernizing `ealeksandrov/SomaFM-miniplayer` so it can run well on Apple silicon Macs. Our work is tracked in `matthewbohl/SomaFM-miniplayer-apple-silicon`.
 
-The goal is to preserve the spirit of the original SomaFM mini player while updating the build, runtime, dependencies, packaging, and tests needed for current macOS hardware and tooling.
+The goal is to preserve the spirit of the original SomaFM mini player while updating the build, runtime, dependencies, packaging, and tests needed for current macOS hardware and tooling. Release builds must remain universal binaries for Apple silicon and Intel Macs, support macOS 13 or later, and remain suitable for Mac App Store distribution.
 
 ## Working Principles
 
@@ -26,7 +26,8 @@ The goal is to preserve the spirit of the original SomaFM mini player while upda
 - Working repository: `https://github.com/matthewbohl/SomaFM-miniplayer-apple-silicon`
 - Local branch at project start: `main`
 - Local status at project start: fresh repository with no committed files
-- Primary platform target: modern Apple silicon based Mac computers
+- Primary platform target: Apple silicon and Intel Macs running macOS 13 or later
+- Distribution target: a universal Mac App Store application
 - Canonical project documentation: `README.md`
 
 Until source code is imported, all technical assumptions about language, build system, dependencies, and supported macOS versions must be confirmed from local files or from the upstream repository.
