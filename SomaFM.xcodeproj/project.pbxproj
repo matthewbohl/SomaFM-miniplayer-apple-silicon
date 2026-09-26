@@ -34,6 +34,7 @@
 		55F100000000000000000001 /* SoakTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F100000000000000000011 /* SoakTestSupport.swift */; };
 		55F100000000000000000002 /* SoakTestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F100000000000000000012 /* SoakTestController.swift */; };
 		55F100000000000000000003 /* SoakTestSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F100000000000000000013 /* SoakTestSupportTests.swift */; };
+		55F200000000000000000001 /* MusicSearchAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F200000000000000000002 /* MusicSearchAPITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		55F100000000000000000011 /* SoakTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoakTestSupport.swift; sourceTree = "<group>"; };
 		55F100000000000000000012 /* SoakTestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoakTestController.swift; sourceTree = "<group>"; };
 		55F100000000000000000013 /* SoakTestSupportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoakTestSupportTests.swift; sourceTree = "<group>"; };
+		55F200000000000000000002 /* MusicSearchAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSearchAPITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				55F000000000000000000019 /* MediaControlsControllerTests.swift */,
+				55F200000000000000000002 /* MusicSearchAPITests.swift */,
 				55F000000000000000000002 /* RadioPlayerTests.swift */,
 				55F100000000000000000013 /* SoakTestSupportTests.swift */,
 				55F000000000000000000011 /* StartAtLoginTests.swift */,
@@ -402,6 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55F000000000000000000018 /* MediaControlsControllerTests.swift in Sources */,
+				55F200000000000000000001 /* MusicSearchAPITests.swift in Sources */,
 				55F000000000000000000001 /* RadioPlayerTests.swift in Sources */,
 				55F100000000000000000003 /* SoakTestSupportTests.swift in Sources */,
 				55F000000000000000000010 /* StartAtLoginTests.swift in Sources */,
@@ -463,7 +467,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -523,7 +527,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -553,7 +557,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "$(SOMAFM_CODE_SIGN_IDENTITY)";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

@@ -6,6 +6,20 @@
 import Cocoa
 import Network
 
+enum AlbumArtworkLayout {
+    static let maximumWidth: CGFloat = 240
+
+    static func width(forStationTitles titles: [String], font: NSFont = .menuFont(ofSize: 0)) -> CGFloat? {
+        let attributes: [NSAttributedString.Key: Any] = [.font: font]
+        let widestTitle = titles
+            .map { ceil(($0 as NSString).size(withAttributes: attributes).width) }
+            .max() ?? 0
+
+        guard widestTitle > 0 else { return nil }
+        return min(widestTitle, maximumWidth)
+    }
+}
+
 @MainActor
 class MenubarController {
     let radioPlayer = RadioPlayer()
@@ -17,7 +31,18 @@ class MenubarController {
     let rightClickMenu = NSMenu()
     let stationsMenu = NSMenu()
 
+    private let artworkItem = NSMenuItem()
+    private let artworkContainerView = NSView()
+    private let artworkImageView = NSImageView()
     let trackItem = NSMenuItem(title: "...", action: #selector(MenubarController.searchTrack), keyEquivalent: "")
+
+    private let artworkCache = NSCache<NSURL, NSImage>()
+    private var trackSearchTask: URLSessionDataTask?
+    private var artworkTask: URLSessionDataTask?
+    private var artworkRequestID = UUID()
+    private var prefetchedArtwork: NSImage?
+    private var displayedTrackName: String?
+    private var trackSearchURL: URL?
 
     var sortedChannels: [Channel]? {
         guard let channels = SomaAPI.channels, channels.count > 0 else { return nil }
@@ -33,6 +58,7 @@ class MenubarController {
 
     init(notificationService: UserNotificationService) {
         self.notificationService = notificationService
+        artworkCache.countLimit = 20
 
         SomaAPI.loadChannels()
 
@@ -61,7 +87,13 @@ class MenubarController {
     }
 
     func setupMenu() {
-        trackItem.toolTip = "Click to search this track in iTunes"
+        artworkImageView.imageScaling = .scaleProportionallyUpOrDown
+        artworkContainerView.addSubview(artworkImageView)
+        artworkItem.view = artworkContainerView
+        artworkItem.isHidden = true
+        rightClickMenu.addItem(artworkItem)
+
+        trackItem.toolTip = "Click to search for this track"
         rightClickMenu.addItem(trackItem)
 
         let volumeItem = NSMenuItem(title: "Volume", action: nil, keyEquivalent: "")
@@ -112,6 +144,7 @@ class MenubarController {
 
         guard let channels = SomaAPI.channels, let sortedChannels = sortedChannels else {
             stationsMenu.addItem(NSMenuItem(title: "No channels available", action: nil, keyEquivalent: ""))
+            updateArtworkPresentation()
             updateMediaNavigationAvailability()
             return
         }
@@ -130,6 +163,7 @@ class MenubarController {
             stationsMenu.addItem(channelItem)
         }
 
+        updateArtworkPresentation()
         updateMediaNavigationAvailability()
     }
 
@@ -137,28 +171,31 @@ class MenubarController {
         updateMediaControls()
 
         if radioPlayer.state == .waitingForNetwork {
+            resetTrackPresentation()
             trackItem.title = "Network unavailable"
             trackItem.target = nil
             return
         }
 
         guard let trackName = radioPlayer.currentTrack, !trackName.isEmpty else {
+            resetTrackPresentation()
             trackItem.title = "..."
             trackItem.target = nil
             return
         }
 
         let truncatedTrackName = trackName.trunc(length: 35)
-        guard truncatedTrackName != trackItem.title else { return }
-
         trackItem.title = truncatedTrackName
         trackItem.target = self
+
+        guard trackName != displayedTrackName else { return }
+        displayedTrackName = trackName
 
         if Settings.notificationsEnabled {
             showTrackNotification()
         }
 
-        MusicSearchAPI.searchTrack(named: trackName)
+        prefetchArtwork(for: trackName)
     }
 
     @objc func updatePlaybackState() {
@@ -205,7 +242,7 @@ class MenubarController {
     }
 
     @objc func searchTrack() {
-        guard let trackURL = MusicSearchAPI.trackSearchURL else { return }
+        guard let trackURL = trackSearchURL else { return }
 
         NSWorkspace.shared.open(trackURL)
     }
@@ -264,6 +301,100 @@ class MenubarController {
         statusItem.menu = rightClickMenu
         statusItem.button?.performClick(nil)
         statusItem.menu = nil
+    }
+
+    private func prefetchArtwork(for trackName: String) {
+        trackSearchTask?.cancel()
+        artworkTask?.cancel()
+
+        let requestID = UUID()
+        artworkRequestID = requestID
+        prefetchedArtwork = nil
+        trackSearchURL = MusicSearchAPI.fallbackSearchURL(trackName: trackName)
+        updateArtworkPresentation()
+
+        trackSearchTask = MusicSearchAPI.searchTrack(named: trackName) { [weak self] response in
+            DispatchQueue.main.async {
+                guard let self = self, self.artworkRequestID == requestID else { return }
+
+                self.trackSearchTask = nil
+                self.trackSearchURL = response.destinationURL
+
+                guard let artworkURL = response.result?.artworkUrl100 else {
+                    self.updateArtworkPresentation()
+                    return
+                }
+
+                self.loadArtwork(from: artworkURL, requestID: requestID)
+            }
+        }
+    }
+
+    private func loadArtwork(from url: URL, requestID: UUID) {
+        if let cachedArtwork = artworkCache.object(forKey: url as NSURL) {
+            prefetchedArtwork = cachedArtwork
+            updateArtworkPresentation()
+            return
+        }
+
+        artworkTask = URLSession.shared.dataTask(with: url) { [weak self] data, response, _ in
+            let statusCode = (response as? HTTPURLResponse)?.statusCode
+
+            DispatchQueue.main.async {
+                guard let self = self,
+                      self.artworkRequestID == requestID,
+                      (200..<300).contains(statusCode ?? 0),
+                      let data = data,
+                      let artwork = NSImage(data: data) else { return }
+
+                self.artworkTask = nil
+                self.artworkCache.setObject(artwork, forKey: url as NSURL)
+                self.prefetchedArtwork = artwork
+                self.updateArtworkPresentation()
+            }
+        }
+        artworkTask?.resume()
+    }
+
+    private func updateArtworkPresentation() {
+        guard let artwork = prefetchedArtwork,
+              let channels = SomaAPI.channels,
+              let artworkWidth = AlbumArtworkLayout.width(forStationTitles: channels.map(\.title)) else {
+            artworkItem.isHidden = true
+            artworkImageView.image = nil
+            return
+        }
+
+        let horizontalPadding: CGFloat = 10
+        let verticalPadding: CGFloat = 4
+        artworkContainerView.frame = NSRect(
+            x: 0,
+            y: 0,
+            width: artworkWidth + horizontalPadding * 2,
+            height: artworkWidth + verticalPadding * 2
+        )
+        artworkImageView.frame = NSRect(
+            x: horizontalPadding,
+            y: verticalPadding,
+            width: artworkWidth,
+            height: artworkWidth
+        )
+        artworkImageView.image = artwork
+        artworkItem.isHidden = false
+    }
+
+    private func resetTrackPresentation() {
+        guard displayedTrackName != nil || prefetchedArtwork != nil || trackSearchURL != nil else { return }
+
+        trackSearchTask?.cancel()
+        artworkTask?.cancel()
+        trackSearchTask = nil
+        artworkTask = nil
+        artworkRequestID = UUID()
+        prefetchedArtwork = nil
+        displayedTrackName = nil
+        trackSearchURL = nil
+        updateArtworkPresentation()
     }
 
     private func setStatusItem(playing: Bool) {

@@ -10,4 +10,5 @@ public struct SearchResult: Codable {
     let collectionName: String
     let trackName: String
     let trackViewUrl: URL
+    let artworkUrl100: URL?
 }

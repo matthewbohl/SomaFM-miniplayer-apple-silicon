@@ -52,8 +52,10 @@ private extension SomaAPI {
 
             do {
                 let channelList = try JSONDecoder().decode(ChannelList.self, from: data)
-                self.channels = channelList.channels
-                SomaAPI.saveChannelsToDisk()
+                DispatchQueue.main.async {
+                    self.channels = channelList.channels
+                    SomaAPI.saveChannelsToDisk()
+                }
             } catch {
                 print("SomaAPI: Error loading channels from API")
             }
