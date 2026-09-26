@@ -28,7 +28,7 @@ Current modernization work includes:
 - Launch at login through the modern `SMAppService` main-application API.
 - Local track and network alerts through the `UserNotifications` framework with explicit opt-in authorization.
 - Global media controls and Now Playing metadata through the macOS `MediaPlayer` framework once station playback begins.
-- Album artwork prefetched when track metadata changes and shown as a fixed 500-point square above the track name in the right-click menu.
+- Album artwork prefetched when track metadata changes and shown as a fixed 300-point square above the track name in the right-click menu.
 - Automatic Light and Dark appearance support through AppKit semantic colors and template images.
 - A repository safety check that blocks tracked personal signing values, private signing material, local home paths, and common credential formats.
 - A dedicated release-optimized soak build and unattended playback lifecycle driver with physical-footprint, RSS, and leak checks.

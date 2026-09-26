@@ -47,8 +47,8 @@ final class MusicSearchAPITests: XCTestCase {
         XCTAssertNil(try XCTUnwrap(MusicSearchAPI.decodeFirstResult(from: data)).artworkUrl100)
     }
 
-    func testArtworkWidthIsAlwaysFiveHundredPoints() {
-        XCTAssertEqual(AlbumArtworkLayout.width, 500)
+    func testArtworkWidthIsAlwaysThreeHundredPoints() {
+        XCTAssertEqual(AlbumArtworkLayout.width, 300)
     }
 
     func testFallbackSearchURLUsesQueryItems() throws {
