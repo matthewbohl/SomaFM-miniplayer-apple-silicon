@@ -7,7 +7,7 @@ import Cocoa
 import Network
 
 enum AlbumArtworkLayout {
-    static let maximumWidth: CGFloat = 240
+    static let maximumWidth: CGFloat = 500
 
     static func width(forStationTitles titles: [String], font: NSFont = .menuFont(ofSize: 0)) -> CGFloat? {
         let attributes: [NSAttributedString.Key: Any] = [.font: font]

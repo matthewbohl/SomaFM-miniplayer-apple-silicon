@@ -64,6 +64,14 @@ final class MusicSearchAPITests: XCTestCase {
         XCTAssertNil(AlbumArtworkLayout.width(forStationTitles: []))
     }
 
+    func testArtworkWidthIsCappedAtFiveHundredPoints() throws {
+        let veryLongStationTitle = String(repeating: "Wide station title ", count: 20)
+
+        let width = try XCTUnwrap(AlbumArtworkLayout.width(forStationTitles: [veryLongStationTitle]))
+
+        XCTAssertEqual(width, 500)
+    }
+
     func testFallbackSearchURLUsesQueryItems() throws {
         let url = try XCTUnwrap(MusicSearchAPI.fallbackSearchURL(trackName: "Artist & Song"))
         let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
