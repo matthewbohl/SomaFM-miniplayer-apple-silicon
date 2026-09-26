@@ -7,7 +7,7 @@ import Cocoa
 import Network
 
 enum AlbumArtworkLayout {
-    static let width: CGFloat = 300
+    static let width: CGFloat = 250
 }
 
 @MainActor
