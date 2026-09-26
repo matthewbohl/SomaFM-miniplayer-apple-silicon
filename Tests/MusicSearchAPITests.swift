@@ -47,29 +47,8 @@ final class MusicSearchAPITests: XCTestCase {
         XCTAssertNil(try XCTUnwrap(MusicSearchAPI.decodeFirstResult(from: data)).artworkUrl100)
     }
 
-    func testArtworkWidthDoesNotExceedWidestStationOrMaximum() throws {
-        let font = NSFont.menuFont(ofSize: 0)
-        let titles = ["Short", "A considerably longer SomaFM station name"]
-        let expectedWidestWidth = titles
-            .map { ceil(($0 as NSString).size(withAttributes: [.font: font]).width) }
-            .max()
-
-        let width = try XCTUnwrap(AlbumArtworkLayout.width(forStationTitles: titles, font: font))
-
-        XCTAssertEqual(width, min(try XCTUnwrap(expectedWidestWidth), AlbumArtworkLayout.maximumWidth))
-        XCTAssertLessThanOrEqual(width, try XCTUnwrap(expectedWidestWidth))
-    }
-
-    func testArtworkWidthIsUnavailableWithoutStations() {
-        XCTAssertNil(AlbumArtworkLayout.width(forStationTitles: []))
-    }
-
-    func testArtworkWidthIsCappedAtFiveHundredPoints() throws {
-        let veryLongStationTitle = String(repeating: "Wide station title ", count: 20)
-
-        let width = try XCTUnwrap(AlbumArtworkLayout.width(forStationTitles: [veryLongStationTitle]))
-
-        XCTAssertEqual(width, 500)
+    func testArtworkWidthIsAlwaysFiveHundredPoints() {
+        XCTAssertEqual(AlbumArtworkLayout.width, 500)
     }
 
     func testFallbackSearchURLUsesQueryItems() throws {

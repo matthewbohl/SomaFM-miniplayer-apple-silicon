@@ -7,17 +7,7 @@ import Cocoa
 import Network
 
 enum AlbumArtworkLayout {
-    static let maximumWidth: CGFloat = 500
-
-    static func width(forStationTitles titles: [String], font: NSFont = .menuFont(ofSize: 0)) -> CGFloat? {
-        let attributes: [NSAttributedString.Key: Any] = [.font: font]
-        let widestTitle = titles
-            .map { ceil(($0 as NSString).size(withAttributes: attributes).width) }
-            .max() ?? 0
-
-        guard widestTitle > 0 else { return nil }
-        return min(widestTitle, maximumWidth)
-    }
+    static let width: CGFloat = 500
 }
 
 @MainActor
@@ -357,14 +347,13 @@ class MenubarController {
     }
 
     private func updateArtworkPresentation() {
-        guard let artwork = prefetchedArtwork,
-              let channels = SomaAPI.channels,
-              let artworkWidth = AlbumArtworkLayout.width(forStationTitles: channels.map(\.title)) else {
+        guard let artwork = prefetchedArtwork else {
             artworkItem.isHidden = true
             artworkImageView.image = nil
             return
         }
 
+        let artworkWidth = AlbumArtworkLayout.width
         let horizontalPadding: CGFloat = 10
         let verticalPadding: CGFloat = 4
         artworkContainerView.frame = NSRect(
